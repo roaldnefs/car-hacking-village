@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Car Hacking Village_ // BSides Groningen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script defer src="script.js"></script>
+</head>
+<body>
+
+<div class="tape" aria-hidden="true"></div>
+
+<div class="wrap">
+
+  <header>
+    <div class="meta">
+      <span>BSIDES GRONINGEN // CAR HACKING VILLAGE</span>
+      <span class="blink">● LIVE</span>
+    </div>
+    <h1>HACK THE<br>CLUSTER<span class="cursor"></span></h1>
+    <p class="subtitle">A hands-on village by <b>BSides Groningen</b> &middot; Grab a badge, find a cluster, inject some frames.</p>
+  </header>
+
+  <!-- Boot log intro -->
+  <div class="bootlog" aria-label="System boot">
+    <div><span class="ok">[OK]</span> badge_detected ......... CANable / SH-C31A</div>
+    <div><span class="ok">[OK]</span> cluster_powered ........ VAG PQ24/PQ34/PQ35</div>
+    <div><span class="ok">[OK]</span> bus_speed .............. 500 kbit/s</div>
+    <div><span class="warn">[!!]</span> driver_required ........ <b>none</b> (WebUSB)</div>
+    <div class="prompt">begin_workshop --no-install --in-browser</div>
+  </div>
+
+  <!-- WHAT YOU GET -->
+  <h2>The setup</h2>
+  <p>At your station you'll find a <b>Volkswagen Group instrument cluster</b> (Škoda Fabia, SEAT Ibiza, or SEAT Leon ~2010), a 12V power supply, and your <b>badge</b> — a USB-to-CAN adapter (CANable 2.0 or SH-C31A) running gs_usb / candleLight firmware.</p>
+
+  <p>No drivers. No installs. Everything runs in your browser via <b>WebUSB</b>.</p>
+
+  <div class="chips">
+    <span class="chip live">CHROME 61+</span>
+    <span class="chip live">EDGE 79+</span>
+    <span class="chip">FIREFOX ✗</span>
+    <span class="chip">SAFARI ✗</span>
+  </div>
+
+  <!-- SAFETY -->
+  <div class="note danger">
+    <div class="label">⚠ Disclaimer</div>
+    Educational purposes only. The clusters are bench-mounted lab gear — <b>not connected to a vehicle</b>. Don't try this on a car you don't own. Hacking real vehicles can brick ECUs, trigger safety systems, and break the law.
+  </div>
+
+  <!-- THE LAUNCH -->
+  <h2>Launch the tool</h2>
+  <p>Open the WebUSB CAN console — it's the same interface you'll use for every challenge below.</p>
+
+  <a class="launch" href="https://roaldnefs.github.io/webusb-can/" target="_blank" rel="noopener">
+    OPEN WEBUSB CAN CONSOLE
+  </a>
+  <p style="font-size:12px;color:var(--dim);text-align:center;margin-top:-6px;">
+    <code class="inline">roaldnefs.github.io/webusb-can</code>
+  </p>
+
+  <!-- STEPS -->
+  <h2>Get connected</h2>
+
+  <p>Three connections, in order: <b>power → CAN bus → laptop</b>. Don't skip the checkpoints between steps — they catch wiring mistakes before they become hardware mistakes.</p>
+
+  <!-- Wiring overview diagram -->
+  <div class="diagram" aria-label="Wiring overview diagram">
+    <div class="caption">
+      <span>Fig 01 // The full data path</span>
+      <span>↓</span>
+    </div>
+    <svg viewBox="0 0 720 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="wiring-title">
+      <title id="wiring-title">Cluster connected via badge to laptop, with PSU supplying separate ground wires to both cluster and badge</title>
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="#8a948a"/>
+        </marker>
+      </defs>
+
+      <!-- ===== 12V PSU (top-left) ===== -->
+      <g transform="translate(20,40)">
+        <rect x="0" y="0" width="120" height="120" rx="4" fill="#0a0c0a" stroke="rgb(255,176,0)" stroke-width="1.5"/>
+        <text x="60" y="26" text-anchor="middle" class="svg-text svg-text-amber" font-size="13" font-weight="700">+12V PSU</text>
+        <text x="60" y="44" text-anchor="middle" class="svg-text svg-text-dim" font-size="9">bench supply</text>
+
+        <!-- Output sockets on right edge — 4 sockets evenly spaced inside the PSU body
+             PSU spans local y=0..120. Sockets at y=66, 84, 102, 120 would put the last on the edge.
+             Use y=60, 78, 96, 114 with 18px spacing, all comfortably inside. -->
+        <!-- +12V → cluster pin 32 -->
+        <circle cx="120" cy="60" r="6" fill="rgb(255,176,0)" stroke="#0a0c0a" stroke-width="1.5"/>
+        <text x="114" y="63" text-anchor="end" class="svg-text svg-text-amber" font-size="8" font-weight="700">+12V</text>
+        <!-- +12V → cluster pin 31 (drives IGN line) -->
+        <circle cx="120" cy="78" r="6" fill="rgb(255,176,0)" stroke="#0a0c0a" stroke-width="1.5"/>
+        <text x="114" y="81" text-anchor="end" class="svg-text svg-text-amber" font-size="8" font-weight="700">+12V</text>
+        <!-- GND → cluster pin 16 -->
+        <circle cx="120" cy="96" r="6" fill="#cccccc" stroke="#0a0c0a" stroke-width="1.5"/>
+        <text x="114" y="99" text-anchor="end" class="svg-text" fill="#cccccc" font-size="8" font-weight="700">GND</text>
+        <!-- GND → badge -->
+        <circle cx="120" cy="114" r="6" fill="#cccccc" stroke="#0a0c0a" stroke-width="1.5"/>
+        <text x="114" y="117" text-anchor="end" class="svg-text" fill="#cccccc" font-size="8" font-weight="700">GND</text>
+      </g>
+
+      <!-- ===== Cluster (middle) ===== -->
+      <g transform="translate(260,40)">
+        <rect x="0" y="0" width="160" height="200" rx="6" fill="#0a0c0a" stroke="rgb(45,216,129)" stroke-width="1.5"/>
+        <text x="80" y="24" text-anchor="middle" class="svg-text" font-size="13" font-weight="700">CLUSTER</text>
+        <text x="80" y="40" text-anchor="middle" class="svg-text svg-text-dim" font-size="9">VAG PQ25/PQ35</text>
+        <!-- gauges -->
+        <circle cx="50" cy="92" r="22" fill="none" stroke="#8a948a" stroke-width="1"/>
+        <line x1="50" y1="92" x2="64" y2="78" stroke="rgb(255,82,82)" stroke-width="1.5"/>
+        <circle cx="110" cy="92" r="22" fill="none" stroke="#8a948a" stroke-width="1"/>
+        <line x1="110" y1="92" x2="96" y2="80" stroke="rgb(255,82,82)" stroke-width="1.5"/>
+
+        <!-- LEFT side pins (PSU enters here): pin 32 +12V, pin 31 IGN, pin 16 GND -->
+        <circle cx="0" cy="140" r="9" fill="rgb(255,176,0)" stroke="#0a0c0a" stroke-width="1.5"/>
+        <text x="0" y="143" text-anchor="middle" class="svg-text" fill="#000" font-size="9" font-weight="800">32</text>
+
+        <circle cx="0" cy="165" r="9" fill="rgb(255,176,0)" stroke="#0a0c0a" stroke-width="1.5"/>
+        <text x="0" y="168" text-anchor="middle" class="svg-text" fill="#000" font-size="9" font-weight="800">31</text>
+
+        <circle cx="0" cy="190" r="9" fill="#cccccc" stroke="#0a0c0a" stroke-width="1.5"/>
+        <text x="0" y="193" text-anchor="middle" class="svg-text" fill="#000" font-size="9" font-weight="800">16</text>
+
+        <!-- RIGHT side pins (CAN bus exits to badge): pin 28 CAN-H, pin 29 CAN-L -->
+        <circle cx="160" cy="155" r="9" fill="#ffe066" stroke="#0a0c0a" stroke-width="1.5"/>
+        <text x="160" y="158" text-anchor="middle" class="svg-text" fill="#000" font-size="9" font-weight="800">28</text>
+
+        <circle cx="160" cy="180" r="9" fill="rgb(45,216,129)" stroke="#0a0c0a" stroke-width="1.5"/>
+        <text x="160" y="183" text-anchor="middle" class="svg-text" fill="#000" font-size="9" font-weight="800">29</text>
+      </g>
+
+      <!-- ===== Laptop (top-right) ===== -->
+      <g transform="translate(490,40)">
+        <rect x="0" y="0" width="220" height="80" rx="4" fill="#0a0c0a" stroke="rgb(45,216,129)" stroke-width="1.5"/>
+        <text x="50" y="26" text-anchor="middle" class="svg-text" font-size="12" font-weight="700">LAPTOP</text>
+        <text x="50" y="44" text-anchor="middle" class="svg-text svg-text-dim" font-size="9">Chrome / Edge</text>
+        <rect x="100" y="12" width="110" height="56" fill="#000" stroke="#1f2520"/>
+        <text x="108" y="26" class="svg-text svg-text-accent" font-size="8" font-family="monospace">123#DEADBEEF</text>
+        <text x="108" y="40" class="svg-text svg-text-accent" font-size="8" font-family="monospace">3D0#0000...</text>
+        <text x="108" y="58" class="svg-text svg-text-amber" font-size="7" font-family="monospace">▌webusb-can</text>
+      </g>
+
+      <!-- ===== Badge / adapter (right column, below laptop) ===== -->
+      <g transform="translate(500,180)">
+        <rect x="0" y="0" width="180" height="100" rx="4" fill="#0a0c0a" stroke="rgb(45,216,129)" stroke-width="1.5"/>
+        <text x="90" y="24" text-anchor="middle" class="svg-text" font-size="12" font-weight="700">YOUR BADGE</text>
+        <text x="90" y="40" text-anchor="middle" class="svg-text svg-text-dim" font-size="9">CANable / SH-C31A</text>
+        <text x="90" y="58" text-anchor="middle" class="svg-text svg-text-accent" font-size="9">USB ↔ CAN</text>
+
+        <!-- Terminal sockets on the LEFT side -->
+        <circle cx="0" cy="36" r="9" fill="#ffe066" stroke="#0a0c0a" stroke-width="1.5"/>
+        <text x="-14" y="39" text-anchor="end" class="svg-text" fill="#ffe066" font-size="9" font-weight="700">CAN-H</text>
+
+        <circle cx="0" cy="60" r="9" fill="rgb(45,216,129)" stroke="#0a0c0a" stroke-width="1.5"/>
+        <text x="-14" y="63" text-anchor="end" class="svg-text svg-text-accent" font-size="9" font-weight="700">CAN-L</text>
+
+        <circle cx="0" cy="84" r="9" fill="#cccccc" stroke="#0a0c0a" stroke-width="1.5"/>
+        <text x="-14" y="87" text-anchor="end" class="svg-text" fill="#cccccc" font-size="9" font-weight="700">GND</text>
+
+        <!-- USB jack on top of badge -->
+        <rect x="80" y="-8" width="20" height="8" fill="#8a948a"/>
+      </g>
+
+      <!-- ============ WIRES ============ -->
+
+      <!-- +12V from PSU (140,100) → cluster pin 32 (260,180) -->
+      <path d="M 140 100 L 200 100 L 200 180 L 260 180"
+            fill="none" stroke="rgb(255,176,0)" stroke-width="2.2"/>
+      <text x="208" y="94" class="svg-text svg-text-amber" font-size="10" font-weight="700">+12V</text>
+
+      <!-- +12V (IGN line) from PSU (140,118) → cluster pin 31 (260,205) -->
+      <path d="M 140 118 L 192 118 L 192 205 L 260 205"
+            fill="none" stroke="rgb(255,176,0)" stroke-width="2.2" stroke-dasharray="6,3"/>
+      <text x="148" y="132" class="svg-text svg-text-amber" font-size="10" font-weight="700">IGN</text>
+
+      <!-- GND from PSU (140,136) → cluster pin 16 (260,230) -->
+      <path d="M 140 136 L 184 136 L 184 230 L 260 230"
+            fill="none" stroke="#cccccc" stroke-width="2.2"/>
+      <text x="148" y="150" class="svg-text" fill="#cccccc" font-size="10" font-weight="700">GND</text>
+
+      <!-- GND from PSU (140,154) → badge GND (500,264) -->
+      <!-- Routes down and around the cluster on the bottom to avoid crossing CAN wires -->
+      <path d="M 140 154 L 168 154 L 168 290 L 480 290 L 480 264 L 500 264"
+            fill="none" stroke="#cccccc" stroke-width="2.2"/>
+      <text x="290" y="304" text-anchor="middle" class="svg-text" fill="#cccccc" font-size="10" font-weight="700">GND (PSU → badge)</text>
+
+      <!-- ============ CAN BUS (cluster → badge) ============ -->
+      <!-- pin 28 (420,195) → badge CAN-H (500,216) -->
+      <path d="M 420 195 L 460 195 L 460 216 L 500 216"
+            fill="none" stroke="#ffe066" stroke-width="2.2"/>
+      <text x="436" y="190" class="svg-text" fill="#ffe066" font-size="10" font-weight="700">CAN-H</text>
+
+      <!-- pin 29 (420,220) → badge CAN-L (500,240) -->
+      <path d="M 420 220 L 452 220 L 452 240 L 500 240"
+            fill="none" stroke="rgb(45,216,129)" stroke-width="2.2"/>
+      <text x="436" y="252" class="svg-text svg-text-accent" font-size="10" font-weight="700">CAN-L</text>
+
+      <!-- USB badge → laptop (vertical) -->
+      <line x1="590" y1="172" x2="590" y2="120" stroke="#8a948a" stroke-width="2" marker-end="url(#arrow)"/>
+      <text x="598" y="150" class="svg-text svg-text-dim" font-size="10">USB</text>
+    </svg>
+  </div>
+
+  <!-- STEP 01 -->
+  <div class="step">
+    <div class="head">
+      <div class="num">01</div>
+      <div class="title">Power the cluster</div>
+    </div>
+    <div class="body">
+      <p>The cluster needs <b>switched ignition</b> and <b>constant +12V</b>, both grounded. The bench harness already has these tied off — just plug in the barrel jack from the supplied PSU.</p>
+
+      <!-- Pinout diagram -->
+      <div class="diagram" style="max-width:340px;margin-left:auto;margin-right:auto;">
+        <div class="caption">
+          <span>Fig 02 // Pinout map</span>
+          <span class="view">VIEWED FROM WIRE SIDE</span>
+        </div>
+        <svg viewBox="0 0 420 660" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="pinout-title">
+          <title id="pinout-title">32-pin VAG cluster connector, 2 wide by 16 tall, with the 5 relevant pins highlighted</title>
+
+          <!-- Connector outer body (portrait orientation) -->
+          <rect x="120" y="20" width="180" height="620" rx="10" fill="#0a1018" stroke="#3060a0" stroke-width="2"/>
+          <rect x="132" y="32" width="156" height="596" rx="6" fill="none" stroke="#1a3a60" stroke-width="1"/>
+
+          <!-- Latch indicator at top -->
+          <rect x="190" y="8" width="40" height="14" rx="2" fill="#3060a0"/>
+          <text x="210" y="6" text-anchor="middle" class="svg-text svg-text-dim" font-size="9">↑ latch</text>
+
+          <!-- Column headers -->
+          <text x="160" y="50" text-anchor="middle" class="svg-text svg-text-dim" font-size="9" font-weight="700">LEFT</text>
+          <text x="260" y="50" text-anchor="middle" class="svg-text svg-text-dim" font-size="9" font-weight="700">RIGHT</text>
+
+          <!-- 32 sockets in 2x16 grid -->
+          <!-- Left column x=152 (socket center 160), Right column x=252 (center 260) -->
+          <!-- 16 rows starting y=62, step 35 -->
+          <!-- Left col pins top→bottom: 17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32 -->
+          <!-- Right col pins top→bottom: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16 -->
+
+          <!-- Row 1: pin 17 / pin 1 -->
+          <rect x="152" y="62" width="16" height="16" rx="2" fill="#000" stroke="#3a6090"/>
+          <rect x="252" y="62" width="16" height="16" rx="2" fill="#000" stroke="#3a6090"/>
+          <text x="160" y="74" text-anchor="middle" class="svg-text svg-text-dim" font-size="9">17</text>
+          <text x="260" y="74" text-anchor="middle" class="svg-text svg-text-dim" font-size="9">1</text>
+
+          <!-- Rows 2-11: each socket labeled with its pin number, same dim style as row 1 -->
+          <g>
+            <rect x="152" y="97"  width="16" height="16" rx="2" fill="#000" stroke="#3a6090"/>
+            <rect x="252" y="97"  width="16" height="16" rx="2" fill="#000" stroke="#3a6090"/>
+            <text x="160" y="109" text-anchor="middle" class="svg-text svg-text-dim" font-size="9">18</text>
+            <text x="260" y="109" text-anchor="middle" class="svg-text svg-text-dim" font-size="9">2</text>
+
+            <rect x="152" y="132" width="16" height="16" rx="2" fill="#000" stroke="#3a6090"/>
+            <rect x="252" y="132" width="16" height="16" rx="2" fill="#000" stroke="#3a6090"/>
+            <text x="160" y="144" text-anchor="middle" class="svg-text svg-text-dim" font-size="9">19</text>
+            <text x="260" y="144" text-anchor="middle" class="svg-text svg-text-dim" font-size="9">3</text>
+
+            <rect x="152" y="167" width="16" height="16" rx="2" fill="#000" stroke="#3a6090"/>
+            <rect x="252" y="167" width="16" height="16" rx="2" fill="#000" stroke="#3a6090"/>
+            <text x="160" y="179" text-anchor="middle" class="svg-text svg-text-dim" font-size="9">20</text>
+            <text x="260" y="179" text-anchor="middle" class="svg-text svg-text-dim" font-size="9">4</text>
+
+            <rect x="152" y="202" width="16" height="16" rx="2" fill="#000" stroke="#3a6090"/>
+            <rect x="252" y="202" width="16" height="16" rx="2" fill="#000" stroke="#3a6090"/>
+            <text x="160" y="214" text-anchor="middle" class="svg-text svg-text-dim" font-size="9">21</text>
+            <text x="260" y="214" text-anchor="middle" class="svg-text svg-text-dim" font-size="9">5</text>
+
+            <rect x="152" y="237" width="16" height="16" rx="2" fill="#000" stroke="#3a6090"/>
+            <rect x="252" y="237" width="16" height="16" rx="2" fill="#000" stroke="#3a6090"/>
+            <text x="160" y="249" text-anchor="middle" class="svg-text svg-text-dim" font-size="9">22</text>
+            <text x="260" y="249" text-anchor="middle" class="svg-text svg-text-dim" font-size="9">6</text>
+
+            <rect x="152" y="272" width="16" height="16" rx="2" fill="#000" stroke="#3a6090"/>
+            <rect x="252" y="272" width="16" height="16" rx="2" fill="#000" stroke="#3a6090"/>
+            <text x="160" y="284" text-anchor="middle" class="svg-text svg-text-dim" font-size="9">23</text>
+            <text x="260" y="284" text-anchor="middle" class="svg-text svg-text-dim" font-size="9">7</text>
+
+            <rect x="152" y="307" width="16" height="16" rx="2" fill="#000" stroke="#3a6090"/>
+            <rect x="252" y="307" width="16" height="16" rx="2" fill="#000" stroke="#3a6090"/>
+            <text x="160" y="319" text-anchor="middle" class="svg-text svg-text-dim" font-size="9">24</text>
+            <text x="260" y="319" text-anchor="middle" class="svg-text svg-text-dim" font-size="9">8</text>
+
+            <rect x="152" y="342" width="16" height="16" rx="2" fill="#000" stroke="#3a6090"/>
+            <rect x="252" y="342" width="16" height="16" rx="2" fill="#000" stroke="#3a6090"/>
+            <text x="160" y="354" text-anchor="middle" class="svg-text svg-text-dim" font-size="9">25</text>
+            <text x="260" y="354" text-anchor="middle" class="svg-text svg-text-dim" font-size="9">9</text>
+
+            <rect x="152" y="377" width="16" height="16" rx="2" fill="#000" stroke="#3a6090"/>
+            <rect x="252" y="377" width="16" height="16" rx="2" fill="#000" stroke="#3a6090"/>
+            <text x="160" y="389" text-anchor="middle" class="svg-text svg-text-dim" font-size="9">26</text>
+            <text x="260" y="389" text-anchor="middle" class="svg-text svg-text-dim" font-size="9">10</text>
+          </g>
+
+          <!-- Row 11 (pins 27 / 11): unhighlighted -->
+          <rect x="152" y="412" width="16" height="16" rx="2" fill="#000" stroke="#3a6090"/>
+          <rect x="252" y="412" width="16" height="16" rx="2" fill="#000" stroke="#3a6090"/>
+          <text x="160" y="424" text-anchor="middle" class="svg-text svg-text-dim" font-size="9">27</text>
+          <text x="260" y="424" text-anchor="middle" class="svg-text svg-text-dim" font-size="9">11</text>
+
+          <!-- Row 12 (pins 28 / 12) — pin 28 = CAN-H (yellow) -->
+          <rect x="152" y="447" width="16" height="16" rx="2" fill="#ffe066" stroke="#ffe066"/>
+          <rect x="252" y="447" width="16" height="16" rx="2" fill="#000" stroke="#3a6090"/>
+          <text x="160" y="459" text-anchor="middle" class="svg-text" fill="#000" font-size="9" font-weight="800">28</text>
+          <text x="260" y="459" text-anchor="middle" class="svg-text svg-text-dim" font-size="9">12</text>
+          <line x1="152" y1="455" x2="80" y2="455" stroke="#ffe066" stroke-width="1"/>
+          <text x="76" y="451" text-anchor="end" class="svg-text" fill="#ffe066" font-size="13" font-weight="700">28</text>
+          <text x="76" y="465" text-anchor="end" class="svg-text svg-text-dim" font-size="10">CAN-H</text>
+
+          <!-- Row 13 (pins 29 / 13) — pin 29 = CAN-L (green) -->
+          <rect x="152" y="482" width="16" height="16" rx="2" fill="rgb(45,216,129)" stroke="rgb(45,216,129)"/>
+          <rect x="252" y="482" width="16" height="16" rx="2" fill="#000" stroke="#3a6090"/>
+          <text x="160" y="494" text-anchor="middle" class="svg-text" fill="#000" font-size="9" font-weight="800">29</text>
+          <text x="260" y="494" text-anchor="middle" class="svg-text svg-text-dim" font-size="9">13</text>
+          <line x1="152" y1="490" x2="80" y2="490" stroke="rgb(45,216,129)" stroke-width="1"/>
+          <text x="76" y="486" text-anchor="end" class="svg-text svg-text-accent" font-size="13" font-weight="700">29</text>
+          <text x="76" y="500" text-anchor="end" class="svg-text svg-text-dim" font-size="10">CAN-L</text>
+
+          <!-- Row 14 (pins 30 / 14) — both unhighlighted -->
+          <rect x="152" y="517" width="16" height="16" rx="2" fill="#000" stroke="#3a6090"/>
+          <rect x="252" y="517" width="16" height="16" rx="2" fill="#000" stroke="#3a6090"/>
+          <text x="160" y="529" text-anchor="middle" class="svg-text svg-text-dim" font-size="9">30</text>
+          <text x="260" y="529" text-anchor="middle" class="svg-text svg-text-dim" font-size="9">14</text>
+
+          <!-- Row 15 (pins 31 / 15) — pin 31 = IGN +12V (amber) -->
+          <rect x="152" y="552" width="16" height="16" rx="2" fill="rgb(255,176,0)" stroke="rgb(255,176,0)"/>
+          <rect x="252" y="552" width="16" height="16" rx="2" fill="#000" stroke="#3a6090"/>
+          <text x="160" y="564" text-anchor="middle" class="svg-text" fill="#000" font-size="9" font-weight="800">31</text>
+          <text x="260" y="564" text-anchor="middle" class="svg-text svg-text-dim" font-size="9">15</text>
+          <line x1="152" y1="560" x2="80" y2="560" stroke="rgb(255,176,0)" stroke-width="1"/>
+          <text x="76" y="556" text-anchor="end" class="svg-text svg-text-amber" font-size="13" font-weight="700">31</text>
+          <text x="76" y="570" text-anchor="end" class="svg-text svg-text-dim" font-size="10">IGN +12V</text>
+
+          <!-- Row 16 (pins 32 / 16) — pin 32 = const +12V (amber), pin 16 = GND (grey) -->
+          <rect x="152" y="587" width="16" height="16" rx="2" fill="rgb(255,176,0)" stroke="rgb(255,176,0)"/>
+          <rect x="252" y="587" width="16" height="16" rx="2" fill="#cccccc" stroke="#cccccc"/>
+          <text x="160" y="599" text-anchor="middle" class="svg-text" fill="#000" font-size="9" font-weight="800">32</text>
+          <text x="260" y="599" text-anchor="middle" class="svg-text" fill="#000" font-size="9" font-weight="800">16</text>
+          <line x1="152" y1="595" x2="80" y2="595" stroke="rgb(255,176,0)" stroke-width="1"/>
+          <text x="76" y="591" text-anchor="end" class="svg-text svg-text-amber" font-size="13" font-weight="700">32</text>
+          <text x="76" y="605" text-anchor="end" class="svg-text svg-text-dim" font-size="10">+12V</text>
+
+          <line x1="268" y1="595" x2="340" y2="595" stroke="#cccccc" stroke-width="1"/>
+          <text x="344" y="591" text-anchor="start" class="svg-text" fill="#cccccc" font-size="13" font-weight="700">16</text>
+          <text x="344" y="605" text-anchor="start" class="svg-text svg-text-dim" font-size="10">GND</text>
+        </svg>
+      </div>
+
+      <p style="font-size:12px;color:var(--dim);margin-top:-4px;">
+        <b style="color:var(--ink);">Pin numbering</b> is moulded into the connector body. Use a phone torch — they're tiny.
+        The numbers above match the workshop's reference orientation: pin 17 top-left, pin 1 top-right, pin 32 bottom-left, pin 16 bottom-right (viewed from the wire side, with the latch up).
+      </p>
+
+      <div class="note warn">
+        <div class="label">⚠ Before plugging in</div>
+        Reverse-polarity will kill the cluster. Confirm <b>+12V on pins 31 &amp; 32</b>, <b>GND on pin 16</b> with a multimeter if the harness wasn't pre-built by a volunteer.
+      </div>
+
+      <div class="checkpoint">
+        <span class="marker">✓ CHECK</span>
+        <span>If powered correctly, the cluster <b>beeps</b> and lights up like a Christmas tree (immobilizer + missing-sensor warnings). Backlight should be on.</span>
+      </div>
+      <div class="checkpoint fail">
+        <span class="marker marker-fail">✗ FAIL</span>
+        <span>Nothing happens → check the barrel jack is in, PSU is on, and pin 31 actually has 12V (some harnesses tie 31 to a switch).</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 02 -->
+  <div class="step">
+    <div class="head">
+      <div class="num">02</div>
+      <div class="title">Wire the badge to the bus</div>
+    </div>
+    <div class="body">
+      <p>Two signal wires from the badge into the cluster's CAN bus, plus a shared ground.</p>
+
+      <table class="ref" style="margin-top:6px;">
+        <thead>
+          <tr><th>Badge terminal</th><th>Cluster pin</th><th>Wire color (typ.)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><b>CAN-H</b></td><td class="id">28</td><td>yellow</td></tr>
+          <tr><td><b>CAN-L</b></td><td class="id">29</td><td>green</td></tr>
+          <tr><td><b>GND</b></td><td class="id">16</td><td>black</td></tr>
+        </tbody>
+      </table>
+
+      <div class="note warn">
+        <div class="label">⚠ Common ground</div>
+        The badge's GND <b>must</b> share ground with the PSU (pin 16). Without it, CAN signalling floats and you'll see garbage frames or nothing at all. The pre-wired harness already does this — verify before changing anything.
+      </div>
+
+      <div class="checkpoint">
+        <span class="marker">✓ CHECK</span>
+        <span>The activity LED on the badge starts <b>blinking</b> within a second of connecting both CAN wires — the cluster's own ECUs are constantly chattering on the bus.</span>
+      </div>
+      <div class="checkpoint fail">
+        <span class="marker marker-fail">✗ FAIL</span>
+        <span>LED stays dark → 90% of the time it's <b>CAN-H and CAN-L swapped</b>. Try flipping them before debugging anything else.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 03 -->
+  <div class="step">
+    <div class="head">
+      <div class="num">03</div>
+      <div class="title">Connect via WebUSB</div>
+    </div>
+    <div class="body">
+      <p>Plug the badge's USB end into your laptop, then in the WebUSB CAN console:</p>
+      <ol style="padding-left: 22px; margin: 6px 0 12px;">
+        <li>Set <b>bitrate</b> → <code class="inline">500000</code></li>
+        <li>Mode → <b>Normal</b></li>
+        <li>Click <b>Connect</b> → pick your adapter from the browser dialog</li>
+      </ol>
+
+      <div class="checkpoint">
+        <span class="marker">✓ CHECK</span>
+        <span>The frame counter starts climbing and you see IDs streaming in the live view. Welcome to the bus.</span>
+      </div>
+      <div class="checkpoint fail">
+        <span class="marker marker-fail">✗ FAIL</span>
+        <span>Browser dialog shows no devices → you're probably on Firefox/Safari (use Chrome/Edge), or the badge is running SLCAN firmware instead of candleLight (ask a volunteer).</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHALLENGES -->
+  <h2>Challenges</h2>
+  <p>Work through these at your own pace. Bring your sheet to the village desk when you've cleared a few — there are stickers.</p>
+
+  <h3>Challenge 01 // Listen</h3>
+  <p>Watch the live frame view. The cluster is broadcasting dozens of messages per second. Identify which arbitration IDs are <b>recurring with stable data</b> (boring heartbeat) and which ones <b>change</b> when you press buttons on the cluster (trip reset, menu).</p>
+  <ul class="mission">
+    <li><label><input type="checkbox"><span class="task">Spot at least 3 recurring IDs <span class="pts">+10</span></span></label></li>
+    <li><label><input type="checkbox"><span class="task">Find an ID whose data changes on a button press <span class="pts">+15</span></span></label></li>
+  </ul>
+
+  <h3>Challenge 02 // Spoof the immobilizer</h3>
+  <p>The red key warning is the cluster missing its handshake. Inject the immobilizer frame to silence it.</p>
+  <pre><span class="c"># In the WebUSB console "Send" panel:</span>
+<span class="p">ID:</span>   <span class="k">3D0</span>
+<span class="p">Data:</span> <span class="k">00 00 00 00 00 00 00 00</span>
+<span class="p">Mode:</span> <span class="k">cyclic, every 100 ms</span></pre>
+  <ul class="mission">
+    <li><label><input type="checkbox"><span class="task">Make the key warning go dark <span class="pts">+25</span></span></label></li>
+    <li><label><input type="checkbox"><span class="task">Find the <b>maximum interval</b> where it still stays off <span class="pts">+15</span></span></label></li>
+  </ul>
+
+  <h3>Challenge 03 // Turn signals</h3>
+  <p>Make the cluster blink. The arbitration ID and payload differ between platforms — that's part of the puzzle.</p>
+  <table class="ref">
+    <thead>
+      <tr><th>Platform</th><th>Cluster</th><th>Hint</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>PQ25</td><td>SEAT Ibiza, Škoda Fabia</td><td>Look around <code class="inline">0x470</code></td></tr>
+      <tr><td>PQ35</td><td>SEAT Leon</td><td>Different ID — fuzz or research</td></tr>
+    </tbody>
+  </table>
+  <ul class="mission">
+    <li><label><input type="checkbox"><span class="task">Activate the left indicator <span class="pts">+20</span></span></label></li>
+    <li><label><input type="checkbox"><span class="task">Activate the right indicator <span class="pts">+20</span></span></label></li>
+    <li><label><input type="checkbox"><span class="task">Hazards (both, simultaneous) <span class="pts">+15</span></span></label></li>
+  </ul>
+
+  <h3>Challenge 04 // Pin the RPM</h3>
+  <p>Find the tachometer message and pin the needle to the redline. The value is typically a 16-bit RPM count, big-endian, scaled — start by sweeping values and watch the needle dance.</p>
+  <ul class="mission">
+    <li><label><input type="checkbox"><span class="task">Move the needle <span class="pts">+15</span></span></label></li>
+    <li><label><input type="checkbox"><span class="task">Hit the redline <span class="pts">+25</span></span></label></li>
+    <li><label><input type="checkbox"><span class="task">Hold a steady idle (≈800 RPM) <span class="pts">+20</span></span></label></li>
+  </ul>
+
+  <h3>Challenge 05 // Speedometer</h3>
+  <p>Same drill, different gauge. The speed signal lives on its own ID. Bonus points for elegance.</p>
+  <ul class="mission">
+    <li><label><input type="checkbox"><span class="task">Show any non-zero speed <span class="pts">+15</span></span></label></li>
+    <li><label><input type="checkbox"><span class="task">Hold a constant 130 km/h for 10s <span class="pts">+20</span></span></label></li>
+    <li><label><input type="checkbox"><span class="task">Sweep 0 → 200 → 0 smoothly <span class="pts">+30</span></span></label></li>
+  </ul>
+
+  <h3>Challenge 06 // Fuzz responsibly <span class="stamp">CAUTION</span></h3>
+  <p>Use the console's random/incremental send mode to fuzz a single arbitration ID and observe what wakes up. Document anything weird.</p>
+  <div class="note warn">
+    <div class="label">⚠ Don't fuzz wide ID ranges</div>
+    Stick to <b>one ID at a time</b>. Broadcasting random frames across the entire ID space can put the cluster into a fault state that needs a power cycle to recover. Ask a volunteer if it locks up.
+  </div>
+  <ul class="mission">
+    <li><label><input type="checkbox"><span class="task">Trigger an undocumented warning light <span class="pts">+25</span></span></label></li>
+    <li><label><input type="checkbox"><span class="task">Make the LCD show something unexpected <span class="pts">+30</span></span></label></li>
+  </ul>
+
+  <!-- QUICK REFERENCE -->
+  <h2>Quick reference</h2>
+
+  <h3>Useful arbitration IDs (VAG PQ-platform, ~2010)</h3>
+  <table class="ref">
+    <thead>
+      <tr><th>ID</th><th>Function</th><th>Notes</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="id">0x280</td><td>Engine RPM</td><td>Bytes 2–3, scaled</td></tr>
+      <tr><td class="id">0x288</td><td>Brake / pedal status</td><td>—</td></tr>
+      <tr><td class="id">0x320</td><td>ABS / wheel speed</td><td>Drives speedometer</td></tr>
+      <tr><td class="id">0x3D0</td><td>Immobilizer</td><td>Cyclic, ≤500 ms</td></tr>
+      <tr><td class="id">0x470</td><td>Door / turn signals (PQ25)</td><td>Bit-packed flags</td></tr>
+      <tr><td class="id">0x5A0</td><td>Coolant / odometer</td><td>—</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:12px;color:var(--dim);">Exact mappings vary by cluster, year, and software level. Verify by observation — that's half the fun.</p>
+
+  <h3>Frame format in the console</h3>
+  <pre><span class="p">ID:</span>   <span class="k">123</span>           <span class="c"># 11-bit hex, no 0x prefix</span>
+<span class="p">DLC:</span>  <span class="k">8</span>             <span class="c"># 0–8 data bytes</span>
+<span class="p">Data:</span> <span class="k">DE AD BE EF 00 00 00 00</span></pre>
+
+  <!-- TROUBLESHOOTING -->
+  <h2>Troubleshooting</h2>
+
+  <details>
+    <summary>The browser doesn't show my adapter</summary>
+    <div class="content">
+      <p>You need <b>Chrome or Edge</b> — Firefox and Safari don't ship WebUSB. Make sure no other program (a SocketCAN driver, a serial terminal) has the adapter open. Unplug and replug the USB cable.</p>
+      <p>The adapter must be running <b>candleLight / gs_usb</b> firmware. SLCAN-firmware adapters won't enumerate over WebUSB — ask a volunteer to swap it.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>Connected, but no frames showing up</summary>
+    <div class="content">
+      <p>Check your bitrate is <b>500 kbit/s</b>. Verify CAN-H goes to pin 28 and CAN-L to pin 29 (not swapped). The cluster also needs <b>both</b> the switched and constant 12V lines — a single one isn't enough to wake it.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>Cluster is locked / unresponsive after fuzzing</summary>
+    <div class="content">
+      <p>Pull the barrel jack, count to five, plug back in. If a warning persists after a clean boot, flag a volunteer.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>I want to do this at home</summary>
+    <div class="content">
+      <p>The whole stack lands somewhere around €75–€125: a CANable 2.0, a junkyard cluster from <a href="https://marktplaats.nl" target="_blank" rel="noopener">Marktplaats</a>, a 12V wall wart, and some jumper wire. Cluster prices vary wildly by model and seller — shop around. The full workshop slides (with command-line <code class="inline">can-utils</code> equivalents) are linked in the resources below.</p>
+    </div>
+  </details>
+
+  <!-- SCORE -->
+  <h2>Your score</h2>
+  <div class="score" id="score">
+    <div class="label">// Total points captured</div>
+    <div class="digits">
+      <span class="total" id="scoreTotal">0</span>
+      <span class="of">/ <span id="scoreMax">0</span> pts</span>
+    </div>
+    <div class="bar"><div class="fill" id="scoreFill"></div></div>
+    <div class="meta-row">
+      <span><span id="scoreCount">0</span> / <span id="scoreOf">0</span> objectives</span>
+      <span class="rank" id="scoreRank">SCRIPT KIDDIE</span>
+    </div>
+    <button class="reset" id="scoreReset" type="button">Reset all</button>
+
+    <div class="celebration" id="celebration" role="status" aria-live="polite">
+      <div class="crown">👑</div>
+      <div class="title">CAN Overlord</div>
+      <div class="sub">// All objectives captured. The cluster is yours.</div>
+      <button class="cta" id="celebCta" type="button">↓ Now go brag</button>
+    </div>
+  </div>
+
+  <!-- Confetti container, populated by JS on completion -->
+  <div class="confetti" id="confetti" aria-hidden="true"></div>
+
+  <!-- SHARE -->
+  <h2>Brag about it</h2>
+  <p>Hit the bus, popped the cluster, earned the rank? Post about it on LinkedIn. Here's who to tag and what to link.</p>
+
+  <div class="share">
+    <h3 style="margin-top:0;">People &amp; pages to mention</h3>
+    <ul style="list-style:none;padding-left:0;font-size:14px;margin-bottom:18px;">
+      <li style="padding:8px 0;border-bottom:1px dotted var(--rule);">
+        → <b>BSides Groningen</b> &middot; <a href="https://www.linkedin.com/company/bsidesgrunn/" target="_blank" rel="noopener">linkedin.com/company/bsidesgrunn</a>
+      </li>
+      <li style="padding:8px 0;border-bottom:1px dotted var(--rule);">
+        → <b>Roald Nefs</b> — village &amp; instructions &middot; <a href="https://www.linkedin.com/in/roaldnefs/" target="_blank" rel="noopener">linkedin.com/in/roaldnefs</a>
+      </li>
+      <li style="padding:8px 0;">
+        → <b>Philip Woldhek</b> — badge &middot; <a href="https://www.linkedin.com/in/philip-woldhek/" target="_blank" rel="noopener">linkedin.com/in/philip-woldhek</a>
+      </li>
+    </ul>
+
+    <h3>Suggested hashtags</h3>
+    <p style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accent);margin-bottom:18px;line-height:1.7;">
+      #BSidesGrunn #CarHacking #CANBus #HardwareHacking #AutomotiveSecurity #InfoSec
+    </p>
+
+    <a class="btn btn-primary" href="https://www.linkedin.com/feed/?shareActive=true" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none;">
+      ↗ Open LinkedIn composer
+    </a>
+
+    <p style="font-size:11px;color:var(--dim);margin-top:14px;letter-spacing:0.04em;">
+      Tip: in the LinkedIn composer, type <code class="inline">@</code> followed by a name to get the proper @-mention — it won't auto-link from a paste.
+    </p>
+  </div>
+
+  <!-- RESOURCES -->
+  <h2>Going deeper</h2>
+  <ul style="list-style:none;padding-left:0;font-size:14px;">
+    <li style="padding:6px 0;border-bottom:1px dotted var(--rule);">
+      → <a href="https://roaldnefs.com/orangecon.pdf" target="_blank" rel="noopener">Full workshop slides (PDF)</a>
+    </li>
+    <li style="padding:6px 0;border-bottom:1px dotted var(--rule);">
+      → <a href="https://github.com/roaldnefs/webusb-can" target="_blank" rel="noopener">webusb-can source on GitHub</a>
+    </li>
+    <li style="padding:6px 0;border-bottom:1px dotted var(--rule);">
+      → <a href="https://github.com/zombieCraig/ICSim" target="_blank" rel="noopener">ICSim — virtual cluster (Linux)</a>
+    </li>
+    <li style="padding:6px 0;border-bottom:1px dotted var(--rule);">
+      → <a href="https://nostarch.com/carhacking" target="_blank" rel="noopener">The Car Hacker's Handbook — Craig Smith</a>
+    </li>
+    <li style="padding:6px 0;border-bottom:1px dotted var(--rule);">
+      → <a href="https://reddit.com/r/CarHacking" target="_blank" rel="noopener">r/CarHacking</a>
+    </li>
+    <li style="padding:6px 0;">
+      → <a href="https://kentindell.github.io/2023/04/03/can-injection/" target="_blank" rel="noopener">CAN injection: keyless car theft (Canis Labs)</a>
+    </li>
+  </ul>
+
+  <footer>
+    <div class="row">
+      <span>BSIDES GRONINGEN // CAR HACKING VILLAGE</span>
+      <span><a href="https://bsidesgrunn.org" target="_blank" rel="noopener">bsidesgrunn.org</a></span>
+    </div>
+    <div class="row" style="margin-top:14px;color:var(--dim);font-size:11px;letter-spacing:0.1em;">
+      <span>// END OF TRANSMISSION</span>
+      <span class="blink" style="color:var(--accent);">_</span>
+    </div>
+  </footer>
+
+</div>
+
+<div class="tape warn" aria-hidden="true"></div>
+
+</body>
+</html>
