@@ -48,7 +48,7 @@
     [90,   'BUS LISTENER'],
     [150,  'FRAME INJECTOR'],
     [220,  'CLUSTER WHISPERER'],
-    [300,  'CAN OVERLORD']
+    [285,  'CAN OVERLORD']
   ];
   function rankFor(score) {
     let r = ranks[0][1];
