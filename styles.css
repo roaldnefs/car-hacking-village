@@ -1,15 +1,25 @@
   :root {
-    --bg: #0a0c0a;
-    --bg-2: #0f1310;
-    --ink: #e6e9e3;
-    --dim: #8a948a;
-    --accent: rgb(45, 216, 129);
-    --amber: #ffb000;        /* CRT amber */
-    --red: #ff5252;
-    --rule: #1f2520;
-    --tape: repeating-linear-gradient(45deg, #ffb000 0 14px, #0a0c0a 14px 28px);
-    --tape-warn: repeating-linear-gradient(45deg, #ffb000 0 14px, #0a0c0a 14px 28px);
+    color-scheme: light dark;
+    --bg:     light-dark(#f5f6f3, #0a0c0a);
+    --bg-2:   light-dark(#ebede7, #0f1310);
+    --ink:    light-dark(#14160f, #e6e9e3);
+    --dim:    light-dark(#5d645b, #8a948a);
+    --accent: light-dark(#128a4a, rgb(45, 216, 129));
+    --amber:  light-dark(#a06800, #ffb000);
+    --red:    light-dark(#c62828, #ff5252);
+    --rule:   light-dark(#cfd5cc, #1f2520);
+    --code-bg: light-dark(#ffffff, #000);
+    --tape: repeating-linear-gradient(45deg,
+      light-dark(#d4a017, #ffb000) 0 14px,
+      light-dark(#f5f6f3, #0a0c0a) 14px 28px);
+    --tape-warn: repeating-linear-gradient(45deg,
+      light-dark(#d4a017, #ffb000) 0 14px,
+      light-dark(#f5f6f3, #0a0c0a) 14px 28px);
   }
+
+  /* Manual theme overrides — set on <html> by an inline script before paint */
+  :root[data-theme="light"] { color-scheme: light; }
+  :root[data-theme="dark"]  { color-scheme: dark; }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -28,9 +38,12 @@
     position: fixed; inset: 0;
     pointer-events: none;
     background:
-      repeating-linear-gradient(0deg, rgba(255,255,255,0.018) 0 1px, transparent 1px 3px),
-      radial-gradient(ellipse at 50% 0%, rgba(179,255,60,0.06), transparent 60%);
-    mix-blend-mode: screen;
+      repeating-linear-gradient(0deg,
+        light-dark(rgba(0,0,0,0.04), rgba(255,255,255,0.018)) 0 1px,
+        transparent 1px 3px),
+      radial-gradient(ellipse at 50% 0%,
+        light-dark(rgba(18,138,74,0.06), rgba(179,255,60,0.06)),
+        transparent 60%);
     z-index: 100;
   }
 
@@ -66,10 +79,6 @@
     text-transform: uppercase;
     color: var(--dim);
     margin-bottom: 18px;
-  }
-  .meta .blink {
-    color: var(--accent);
-    animation: blink 1.4s steps(2, start) infinite;
   }
   @keyframes blink { to { visibility: hidden; } }
 
@@ -166,7 +175,7 @@
   /* Code block */
   pre, code.inline {
     font-family: 'JetBrains Mono', monospace;
-    background: #000;
+    background: var(--code-bg);
     border: 1px solid var(--rule);
     color: var(--accent);
   }
@@ -193,7 +202,7 @@
     border: 1px solid var(--rule);
     border-bottom-width: 2px;
     padding: 2px 6px;
-    background: #000;
+    background: var(--code-bg);
     color: var(--ink);
   }
 
@@ -296,6 +305,7 @@
   }
   .launch:hover {
     background: var(--ink);
+    color: var(--bg) !important;
     transform: translate(-1px, -1px);
     box-shadow: 4px 4px 0 var(--accent);
   }
@@ -329,7 +339,7 @@
     height: 18px;
     margin-top: 2px;
     border: 1.5px solid var(--accent);
-    background: #000;
+    background: var(--code-bg);
     cursor: pointer;
     position: relative;
     transition: background 0.12s ease;
@@ -366,12 +376,12 @@
     color: var(--dim);
   }
 
-  /* Diagrams */
+  /* Diagrams — kept on a fixed dark canvas in both themes. The SVG boxes
+     and pin colors are tuned for a dark substrate; theming the canvas
+     would invert the text contrast inside every hardcoded box. */
   .diagram {
     border: 1px solid var(--rule);
-    background:
-      linear-gradient(rgba(255,255,255,0.012), rgba(255,255,255,0.012)),
-      var(--bg-2);
+    background-color: #0a0c0a;
     background-image:
       linear-gradient(rgba(45,216,129,0.04) 1px, transparent 1px),
       linear-gradient(90deg, rgba(45,216,129,0.04) 1px, transparent 1px);
@@ -386,7 +396,7 @@
   }
   .diagram .caption {
     font-size: 11px;
-    color: var(--dim);
+    color: #8a948a;
     text-transform: uppercase;
     letter-spacing: 0.14em;
     margin-bottom: 10px;
@@ -395,18 +405,18 @@
     align-items: center;
   }
   .diagram .caption .view {
-    color: var(--amber);
+    color: #ffb000;
     font-weight: 700;
   }
 
-  /* SVG-shared styles */
+  /* SVG-shared styles — fixed dark-mode values since diagram canvas is fixed dark */
   .svg-text {
     font-family: 'JetBrains Mono', monospace;
-    fill: var(--ink);
+    fill: #e6e9e3;
   }
-  .svg-text-dim { fill: var(--dim); }
-  .svg-text-accent { fill: var(--accent); }
-  .svg-text-amber { fill: var(--amber); }
+  .svg-text-dim    { fill: #8a948a; }
+  .svg-text-accent { fill: rgb(45, 216, 129); }
+  .svg-text-amber  { fill: #ffb000; }
 
   /* Checkpoint rows */
   .checkpoint {
@@ -488,7 +498,7 @@
   }
   .score .bar {
     height: 8px;
-    background: #000;
+    background: var(--code-bg);
     border: 1px solid var(--rule);
     margin-top: 16px;
     position: relative;
@@ -668,7 +678,7 @@
   .share .post {
     border: 1px solid var(--accent);
     border-top: none;
-    background: #000;
+    background: var(--code-bg);
     padding: 16px 18px;
     font-family: 'JetBrains Mono', monospace;
     font-size: 13px;
@@ -708,6 +718,7 @@
   }
   .share .btn-primary:hover {
     background: var(--ink);
+    color: var(--bg);
     transform: translate(-1px, -1px);
     box-shadow: 3px 3px 0 var(--accent);
   }
@@ -780,4 +791,29 @@
     h2 { font-size: 22px; margin-top: 36px; }
     pre { font-size: 12px; }
     .step .num { min-width: 44px; padding: 10px; font-size: 16px; }
+  }
+
+  /* Theme-toggle button (in the header .meta row) */
+  .theme-toggle {
+    background: transparent;
+    border: 1px solid var(--rule);
+    color: var(--dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.1s ease, border-color 0.1s ease;
+  }
+  .theme-toggle:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+  .theme-toggle .theme-icon {
+    font-size: 12px;
+    line-height: 1;
   }

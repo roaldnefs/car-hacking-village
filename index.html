@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Car Hacking Village_</title>
+<script>
+  (function(){try{var t=localStorage.getItem('chv-theme');if(t==='light'||t==='dark'){document.documentElement.dataset.theme=t;}}catch(e){}})();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
@@ -19,7 +22,10 @@
   <header>
     <div class="meta">
       <span>CAR HACKING VILLAGE</span>
-      <span class="blink">● LIVE</span>
+      <button class="theme-toggle" type="button" aria-label="Toggle theme">
+        <span class="theme-icon" aria-hidden="true">☾</span>
+        <span class="theme-label">DARK</span>
+      </button>
     </div>
     <h1>HACK THE<br>CLUSTER<span class="cursor"></span></h1>
     <p class="subtitle">A hands-on village by <b><a href="https://roaldnefs.com" target="_blank" rel="noopener">Roald Nefs</a></b> &middot; Grab an adapter, find a cluster, inject some frames.</p>

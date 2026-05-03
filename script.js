@@ -134,3 +134,42 @@
 
   update();
 })();
+
+// ---- Theme toggle ----
+(function() {
+  const root = document.documentElement;
+  const btn = document.querySelector('.theme-toggle');
+  if (!btn) return;
+  const iconEl  = btn.querySelector('.theme-icon');
+  const labelEl = btn.querySelector('.theme-label');
+  const KEY = 'chv-theme';
+
+  function effective() {
+    const t = root.dataset.theme;
+    if (t === 'light' || t === 'dark') return t;
+    return matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+  }
+
+  // Button shows the theme you'll switch *to*
+  function render() {
+    const t = effective();
+    iconEl.textContent  = t === 'dark' ? '☀' : '☾';
+    labelEl.textContent = t === 'dark' ? 'LIGHT' : 'DARK';
+    btn.setAttribute('aria-pressed', t === 'light' ? 'true' : 'false');
+  }
+
+  btn.addEventListener('click', () => {
+    const next = effective() === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    try { localStorage.setItem(KEY, next); } catch (e) {}
+    render();
+  });
+
+  // If the user has never picked manually, follow OS changes live
+  const mq = matchMedia('(prefers-color-scheme: light)');
+  mq.addEventListener?.('change', () => {
+    if (!root.dataset.theme) render();
+  });
+
+  render();
+})();
