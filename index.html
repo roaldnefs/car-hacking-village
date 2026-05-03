@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Car Hacking Village_ // BSides Groningen</title>
+<title>Car Hacking Village_</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
@@ -18,16 +18,16 @@
 
   <header>
     <div class="meta">
-      <span>BSIDES GRONINGEN // CAR HACKING VILLAGE</span>
+      <span>CAR HACKING VILLAGE</span>
       <span class="blink">● LIVE</span>
     </div>
     <h1>HACK THE<br>CLUSTER<span class="cursor"></span></h1>
-    <p class="subtitle">A hands-on village by <b>BSides Groningen</b> &middot; Grab a badge, find a cluster, inject some frames.</p>
+    <p class="subtitle">A hands-on village by <b><a href="https://roaldnefs.com" target="_blank" rel="noopener">Roald Nefs</a></b> &middot; Grab an adapter, find a cluster, inject some frames.</p>
   </header>
 
   <!-- Boot log intro -->
   <div class="bootlog" aria-label="System boot">
-    <div><span class="ok">[OK]</span> badge_detected ......... CANable / SH-C31A</div>
+    <div><span class="ok">[OK]</span> adapter_detected ....... CANable / SH-C31A</div>
     <div><span class="ok">[OK]</span> cluster_powered ........ VAG PQ24/PQ34/PQ35</div>
     <div><span class="ok">[OK]</span> bus_speed .............. 500 kbit/s</div>
     <div><span class="warn">[!!]</span> driver_required ........ <b>none</b> (WebUSB)</div>
@@ -36,7 +36,7 @@
 
   <!-- WHAT YOU GET -->
   <h2>The setup</h2>
-  <p>At your station you'll find a <b>Volkswagen Group instrument cluster</b> (Škoda Fabia, SEAT Ibiza, or SEAT Leon ~2010), a 12V power supply, and your <b>badge</b> — a USB-to-CAN adapter (CANable 2.0 or SH-C31A) running gs_usb / candleLight firmware.</p>
+  <p>At your station you'll find a <b>Volkswagen Group instrument cluster</b> (Škoda Fabia, SEAT Ibiza, or SEAT Leon ~2010), a 12V power supply, and a <b>USB-to-CAN adapter</b> (CANable 2.0 or SH-C31A) running gs_usb / candleLight firmware.</p>
 
   <p>No drivers. No installs. Everything runs in your browser via <b>WebUSB</b>.</p>
 
@@ -76,7 +76,7 @@
       <span>↓</span>
     </div>
     <svg viewBox="0 0 720 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="wiring-title">
-      <title id="wiring-title">Cluster connected via badge to laptop, with PSU supplying separate ground wires to both cluster and badge</title>
+      <title id="wiring-title">Cluster connected via adapter to laptop, with PSU supplying separate ground wires to both cluster and adapter</title>
       <defs>
         <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
           <path d="M0,0 L10,5 L0,10 z" fill="#8a948a"/>
@@ -101,7 +101,7 @@
         <!-- GND → cluster pin 16 -->
         <circle cx="120" cy="96" r="6" fill="#cccccc" stroke="#0a0c0a" stroke-width="1.5"/>
         <text x="114" y="99" text-anchor="end" class="svg-text" fill="#cccccc" font-size="8" font-weight="700">GND</text>
-        <!-- GND → badge -->
+        <!-- GND → adapter -->
         <circle cx="120" cy="114" r="6" fill="#cccccc" stroke="#0a0c0a" stroke-width="1.5"/>
         <text x="114" y="117" text-anchor="end" class="svg-text" fill="#cccccc" font-size="8" font-weight="700">GND</text>
       </g>
@@ -127,7 +127,7 @@
         <circle cx="0" cy="190" r="9" fill="#cccccc" stroke="#0a0c0a" stroke-width="1.5"/>
         <text x="0" y="193" text-anchor="middle" class="svg-text" fill="#000" font-size="9" font-weight="800">16</text>
 
-        <!-- RIGHT side pins (CAN bus exits to badge): pin 28 CAN-H, pin 29 CAN-L -->
+        <!-- RIGHT side pins (CAN bus exits to adapter): pin 28 CAN-H, pin 29 CAN-L -->
         <circle cx="160" cy="155" r="9" fill="#ffe066" stroke="#0a0c0a" stroke-width="1.5"/>
         <text x="160" y="158" text-anchor="middle" class="svg-text" fill="#000" font-size="9" font-weight="800">28</text>
 
@@ -146,10 +146,10 @@
         <text x="108" y="58" class="svg-text svg-text-amber" font-size="7" font-family="monospace">▌webusb-can</text>
       </g>
 
-      <!-- ===== Badge / adapter (right column, below laptop) ===== -->
+      <!-- ===== Adapter (right column, below laptop) ===== -->
       <g transform="translate(500,180)">
         <rect x="0" y="0" width="180" height="100" rx="4" fill="#0a0c0a" stroke="rgb(45,216,129)" stroke-width="1.5"/>
-        <text x="90" y="24" text-anchor="middle" class="svg-text" font-size="12" font-weight="700">YOUR BADGE</text>
+        <text x="90" y="24" text-anchor="middle" class="svg-text" font-size="12" font-weight="700">CAN ADAPTER</text>
         <text x="90" y="40" text-anchor="middle" class="svg-text svg-text-dim" font-size="9">CANable / SH-C31A</text>
         <text x="90" y="58" text-anchor="middle" class="svg-text svg-text-accent" font-size="9">USB ↔ CAN</text>
 
@@ -163,7 +163,7 @@
         <circle cx="0" cy="84" r="9" fill="#cccccc" stroke="#0a0c0a" stroke-width="1.5"/>
         <text x="-14" y="87" text-anchor="end" class="svg-text" fill="#cccccc" font-size="9" font-weight="700">GND</text>
 
-        <!-- USB jack on top of badge -->
+        <!-- USB jack on top of adapter -->
         <rect x="80" y="-8" width="20" height="8" fill="#8a948a"/>
       </g>
 
@@ -184,24 +184,24 @@
             fill="none" stroke="#cccccc" stroke-width="2.2"/>
       <text x="148" y="150" class="svg-text" fill="#cccccc" font-size="10" font-weight="700">GND</text>
 
-      <!-- GND from PSU (140,154) → badge GND (500,264) -->
+      <!-- GND from PSU (140,154) → adapter GND (500,264) -->
       <!-- Routes down and around the cluster on the bottom to avoid crossing CAN wires -->
       <path d="M 140 154 L 168 154 L 168 290 L 480 290 L 480 264 L 500 264"
             fill="none" stroke="#cccccc" stroke-width="2.2"/>
-      <text x="290" y="304" text-anchor="middle" class="svg-text" fill="#cccccc" font-size="10" font-weight="700">GND (PSU → badge)</text>
+      <text x="290" y="304" text-anchor="middle" class="svg-text" fill="#cccccc" font-size="10" font-weight="700">GND (PSU → adapter)</text>
 
-      <!-- ============ CAN BUS (cluster → badge) ============ -->
-      <!-- pin 28 (420,195) → badge CAN-H (500,216) -->
+      <!-- ============ CAN BUS (cluster → adapter) ============ -->
+      <!-- pin 28 (420,195) → adapter CAN-H (500,216) -->
       <path d="M 420 195 L 460 195 L 460 216 L 500 216"
             fill="none" stroke="#ffe066" stroke-width="2.2"/>
       <text x="436" y="190" class="svg-text" fill="#ffe066" font-size="10" font-weight="700">CAN-H</text>
 
-      <!-- pin 29 (420,220) → badge CAN-L (500,240) -->
+      <!-- pin 29 (420,220) → adapter CAN-L (500,240) -->
       <path d="M 420 220 L 452 220 L 452 240 L 500 240"
             fill="none" stroke="rgb(45,216,129)" stroke-width="2.2"/>
       <text x="436" y="252" class="svg-text svg-text-accent" font-size="10" font-weight="700">CAN-L</text>
 
-      <!-- USB badge → laptop (vertical) -->
+      <!-- USB adapter → laptop (vertical) -->
       <line x1="590" y1="172" x2="590" y2="120" stroke="#8a948a" stroke-width="2" marker-end="url(#arrow)"/>
       <text x="598" y="150" class="svg-text svg-text-dim" font-size="10">USB</text>
     </svg>
@@ -376,14 +376,14 @@
   <div class="step">
     <div class="head">
       <div class="num">02</div>
-      <div class="title">Wire the badge to the bus</div>
+      <div class="title">Wire the adapter to the bus</div>
     </div>
     <div class="body">
-      <p>Two signal wires from the badge into the cluster's CAN bus, plus a shared ground.</p>
+      <p>Two signal wires from the adapter into the cluster's CAN bus, plus a shared ground.</p>
 
       <table class="ref" style="margin-top:6px;">
         <thead>
-          <tr><th>Badge terminal</th><th>Cluster pin</th><th>Wire color (typ.)</th></tr>
+          <tr><th>Adapter terminal</th><th>Cluster pin</th><th>Wire color (typ.)</th></tr>
         </thead>
         <tbody>
           <tr><td><b>CAN-H</b></td><td class="id">28</td><td>yellow</td></tr>
@@ -394,12 +394,12 @@
 
       <div class="note warn">
         <div class="label">⚠ Common ground</div>
-        The badge's GND <b>must</b> share ground with the PSU (pin 16). Without it, CAN signalling floats and you'll see garbage frames or nothing at all. The pre-wired harness already does this — verify before changing anything.
+        The adapter's GND <b>must</b> share ground with the PSU (pin 16). Without it, CAN signalling floats and you'll see garbage frames or nothing at all. The pre-wired harness already does this — verify before changing anything.
       </div>
 
       <div class="checkpoint">
         <span class="marker">✓ CHECK</span>
-        <span>The activity LED on the badge starts <b>blinking</b> within a second of connecting both CAN wires — the cluster's own ECUs are constantly chattering on the bus.</span>
+        <span>The activity LED on the adapter starts <b>blinking</b> within a second of connecting both CAN wires — the cluster's own ECUs are constantly chattering on the bus.</span>
       </div>
       <div class="checkpoint fail">
         <span class="marker marker-fail">✗ FAIL</span>
@@ -415,7 +415,7 @@
       <div class="title">Connect via WebUSB</div>
     </div>
     <div class="body">
-      <p>Plug the badge's USB end into your laptop, then in the WebUSB CAN console:</p>
+      <p>Plug the adapter's USB end into your laptop, then in the WebUSB CAN console:</p>
       <ol style="padding-left: 22px; margin: 6px 0 12px;">
         <li>Set <b>bitrate</b> → <code class="inline">500000</code></li>
         <li>Mode → <b>Normal</b></li>
@@ -428,7 +428,7 @@
       </div>
       <div class="checkpoint fail">
         <span class="marker marker-fail">✗ FAIL</span>
-        <span>Browser dialog shows no devices → you're probably on Firefox/Safari (use Chrome/Edge), or the badge is running SLCAN firmware instead of candleLight (ask a volunteer).</span>
+        <span>Browser dialog shows no devices → you're probably on Firefox/Safari (use Chrome/Edge), or the adapter is running SLCAN firmware instead of candleLight (ask a volunteer).</span>
       </div>
     </div>
   </div>
@@ -551,7 +551,7 @@
   <details>
     <summary>I want to do this at home</summary>
     <div class="content">
-      <p>The whole stack lands somewhere around €75–€125: a CANable 2.0, a junkyard cluster from <a href="https://marktplaats.nl" target="_blank" rel="noopener">Marktplaats</a>, a 12V wall wart, and some jumper wire. Cluster prices vary wildly by model and seller — shop around. The full workshop slides (with command-line <code class="inline">can-utils</code> equivalents) are linked in the resources below.</p>
+      <p>The whole stack lands somewhere around €75–€125: a CANable 2.0, a junkyard cluster from <a href="https://ebay.com" target="_blank" rel="noopener">eBay</a>, a 12V wall wart, and some jumper wire. Cluster prices vary wildly by model and seller — shop around. The full workshop slides (with command-line <code class="inline">can-utils</code> equivalents) are linked in the resources below.</p>
     </div>
   </details>
 
@@ -588,20 +588,14 @@
   <div class="share">
     <h3 style="margin-top:0;">People &amp; pages to mention</h3>
     <ul style="list-style:none;padding-left:0;font-size:14px;margin-bottom:18px;">
-      <li style="padding:8px 0;border-bottom:1px dotted var(--rule);">
-        → <b>BSides Groningen</b> &middot; <a href="https://www.linkedin.com/company/bsidesgrunn/" target="_blank" rel="noopener">linkedin.com/company/bsidesgrunn</a>
-      </li>
-      <li style="padding:8px 0;border-bottom:1px dotted var(--rule);">
-        → <b>Roald Nefs</b> — village &amp; instructions &middot; <a href="https://www.linkedin.com/in/roaldnefs/" target="_blank" rel="noopener">linkedin.com/in/roaldnefs</a>
-      </li>
       <li style="padding:8px 0;">
-        → <b>Philip Woldhek</b> — badge &middot; <a href="https://www.linkedin.com/in/philip-woldhek/" target="_blank" rel="noopener">linkedin.com/in/philip-woldhek</a>
+        → <b>Roald Nefs</b> &middot; <a href="https://www.linkedin.com/in/roaldnefs/" target="_blank" rel="noopener">linkedin.com/in/roaldnefs</a> &middot; <a href="https://roaldnefs.com" target="_blank" rel="noopener">roaldnefs.com</a>
       </li>
     </ul>
 
     <h3>Suggested hashtags</h3>
     <p style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accent);margin-bottom:18px;line-height:1.7;">
-      #BSidesGrunn #CarHacking #CANBus #HardwareHacking #AutomotiveSecurity #InfoSec
+      #CarHacking #CANBus #HardwareHacking #AutomotiveSecurity #InfoSec
     </p>
 
     <a class="btn btn-primary" href="https://www.linkedin.com/feed/?shareActive=true" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none;">
@@ -638,8 +632,8 @@
 
   <footer>
     <div class="row">
-      <span>BSIDES GRONINGEN // CAR HACKING VILLAGE</span>
-      <span><a href="https://bsidesgrunn.org" target="_blank" rel="noopener">bsidesgrunn.org</a></span>
+      <span>CAR HACKING VILLAGE</span>
+      <span><a href="https://roaldnefs.com" target="_blank" rel="noopener">roaldnefs.com</a></span>
     </div>
     <div class="row" style="margin-top:14px;color:var(--dim);font-size:11px;letter-spacing:0.1em;">
       <span>// END OF TRANSMISSION</span>

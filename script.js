@@ -11,7 +11,7 @@
   const celebCta   = document.getElementById('celebCta');
   const confettiEl = document.getElementById('confetti');
 
-  const STORAGE_KEY = 'bsidesgrunn-village-score-v1';
+  const STORAGE_KEY = 'car-hacking-village-score-v1';
 
   // ---- Storage (localStorage may be unavailable in some embedded contexts) ----
   function safeGet() {
