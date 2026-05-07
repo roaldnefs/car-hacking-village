@@ -450,13 +450,13 @@
   </ul>
 
   <h3>Challenge 02 // Spoof the immobilizer</h3>
-  <p>The red key warning is the cluster missing its handshake. Inject the immobilizer frame to silence it.</p>
+  <p>The orange wheel warning is the cluster missing its handshake. Inject the immobilizer frame to silence it.</p>
   <pre><span class="c"># In the WebUSB console "Send" panel:</span>
 <span class="p">ID:</span>   <span class="k">3D0</span>
 <span class="p">Data:</span> <span class="k">00 00 00 00 00 00 00 00</span>
 <span class="p">Mode:</span> <span class="k">cyclic, every 100 ms</span></pre>
   <ul class="mission">
-    <li><label><input type="checkbox"><span class="task">Make the key warning go dark <span class="pts">+25</span></span></label></li>
+    <li><label><input type="checkbox"><span class="task">Make the wheel warning go dark <span class="pts">+25</span></span></label></li>
     <li><label><input type="checkbox"><span class="task">Find the <b>maximum interval</b> where it still stays off <span class="pts">+15</span></span></label></li>
   </ul>
 
