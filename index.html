@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Car Hacking Village_</title>
 <script>
-  (function(){try{var t=localStorage.getItem('chv-theme');if(t==='light'||t==='dark'){document.documentElement.dataset.theme=t;}}catch(e){}})();
+  (function(){var d=document.documentElement;try{var t=localStorage.getItem('chv-theme');if(t==='light'||t==='dark'||t==='orange'){d.dataset.theme=t;return;}}catch(e){}d.dataset.theme='orange';})();
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,7 +28,7 @@
       </button>
     </div>
     <h1>HACK THE<br>CLUSTER<span class="cursor"></span></h1>
-    <p class="subtitle">A hands-on village by <b><a href="https://roaldnefs.com" target="_blank" rel="noopener">Roald Nefs</a></b> &middot; Grab an adapter, find a cluster, inject some frames.</p>
+    <p class="subtitle">A hands-on village by <b><a href="https://warpnet.nl" target="_blank" rel="noopener">Warpnet</a></b> &amp; <b><a href="https://roaldnefs.com" target="_blank" rel="noopener">Roald Nefs</a></b> &middot; Grab an adapter, find a cluster, inject some frames.</p>
   </header>
 
   <!-- Boot log intro -->
@@ -47,9 +47,21 @@
   <!-- FEATURED AT -->
   <h2>Featured at</h2>
   <p>The village has been deployed in the wild — bench, cluster, and CAN bus, on a folding table near you:</p>
+  <div class="gallery">
+    <figure>
+      <img src="images/1778148928477.jpeg" alt="Attendees gathered around the Car Hacking Village booth, instrument clusters and laptops spread across a workshop table." loading="lazy" decoding="async">
+    </figure>
+    <figure>
+      <img src="images/1778148928552.jpeg" alt="Close-up of a Škoda Fabia cluster powered up on a bench, speedometer needle visible, next to a laptop running the WebUSB CAN console." loading="lazy" decoding="async">
+    </figure>
+  </div>
+  <p style="font-size:11px;color:var(--dim);text-align:right;margin-top:-10px;letter-spacing:0.06em;">
+    Photos by <a href="https://www.dlh.lu/" target="_blank" rel="noopener">DLH</a> at BSides Luxembourg 2026
+  </p>
   <div class="bootlog" aria-label="Event deployments">
     <div><span class="ok">[OK]</span> bsides_groningen ....... 2026 · NL · cluster popped</div>
     <div><span class="ok">[OK]</span> bsides_luxembourg ...... 2026 · LU · cluster popped</div>
+    <div><span class="warn">[..]</span> orangecon .............. 2026 · NL · village inbound</div>
     <div class="prompt">next_event --watching=true</div>
   </div>
 
@@ -623,6 +635,9 @@
     <ul style="list-style:none;padding-left:0;font-size:14px;margin-bottom:18px;">
       <li style="padding:8px 0;">
         → <b>Roald Nefs</b> &middot; <a href="https://www.linkedin.com/in/roaldnefs/" target="_blank" rel="noopener">linkedin.com/in/roaldnefs</a> &middot; <a href="https://roaldnefs.com" target="_blank" rel="noopener">roaldnefs.com</a>
+      </li>
+      <li style="padding:8px 0;">
+        → <b>Warpnet</b> &middot; <a href="https://www.linkedin.com/company/warpnet" target="_blank" rel="noopener">linkedin.com/company/warpnet</a> &middot; <a href="https://warpnet.nl" target="_blank" rel="noopener">warpnet.nl</a>
       </li>
     </ul>
 

@@ -135,7 +135,7 @@
   update();
 })();
 
-// ---- Theme toggle ----
+// ---- Theme toggle (orange → dark → light → orange …) ----
 (function() {
   const root = document.documentElement;
   const btn = document.querySelector('.theme-toggle');
@@ -144,31 +144,28 @@
   const labelEl = btn.querySelector('.theme-label');
   const KEY = 'chv-theme';
 
+  const ICONS  = { orange: '◉', dark: '☾', light: '☀' };
+  const LABELS = { orange: 'ORANGE', dark: 'DARK', light: 'LIGHT' };
+  const NEXT   = { orange: 'dark', dark: 'light', light: 'orange' };
+
   function effective() {
     const t = root.dataset.theme;
-    if (t === 'light' || t === 'dark') return t;
-    return matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    return (t === 'orange' || t === 'dark' || t === 'light') ? t : 'orange';
   }
 
   // Button shows the theme you'll switch *to*
   function render() {
-    const t = effective();
-    iconEl.textContent  = t === 'dark' ? '☀' : '☾';
-    labelEl.textContent = t === 'dark' ? 'LIGHT' : 'DARK';
-    btn.setAttribute('aria-pressed', t === 'light' ? 'true' : 'false');
+    const next = NEXT[effective()];
+    iconEl.textContent  = ICONS[next];
+    labelEl.textContent = LABELS[next];
+    btn.setAttribute('aria-label', 'Switch to ' + LABELS[next].toLowerCase() + ' theme');
   }
 
   btn.addEventListener('click', () => {
-    const next = effective() === 'dark' ? 'light' : 'dark';
+    const next = NEXT[effective()];
     root.dataset.theme = next;
     try { localStorage.setItem(KEY, next); } catch (e) {}
     render();
-  });
-
-  // If the user has never picked manually, follow OS changes live
-  const mq = matchMedia('(prefers-color-scheme: light)');
-  mq.addEventListener?.('change', () => {
-    if (!root.dataset.theme) render();
   });
 
   render();
