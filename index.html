@@ -11,6 +11,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
+<script defer src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
 <script defer src="script.js"></script>
 </head>
 <body>
@@ -43,6 +44,20 @@
   <p style="font-size:12px;color:var(--dim);text-align:center;">
     Stuck mid-challenge? Scroll past the challenges for the <a href="#quick-reference">quick reference</a> (CAN IDs, frame format) and <a href="#troubleshooting">troubleshooting / FAQ</a>.
   </p>
+
+  <!-- SCAN & SHARE -->
+  <h2>Scan &amp; share</h2>
+  <p>Scan the QR to open this page on your phone — handy as a second screen while you work the cluster. Your progress saves locally, so the rank you earn is yours to keep. Like the page? Pass the link to a friend, or hit <b>Print as poster</b> for a take-home keepsake.</p>
+  <div class="qr-share">
+    <div class="qr-card">
+      <div class="qr" id="qrcode" aria-label="QR code linking to this page"></div>
+      <div class="qr-meta">
+        <div class="qr-label">// scan to load</div>
+        <div class="qr-url" id="qrUrl">roaldnefs.github.io/car-hacking-village</div>
+        <button class="qr-print-btn" id="qrPrint" type="button">↗ Print as poster</button>
+      </div>
+    </div>
+  </div>
 
   <!-- FEATURED AT -->
   <h2>Featured at</h2>
@@ -689,6 +704,16 @@
     </div>
   </footer>
 
+</div>
+
+<!-- Print-only poster (hidden on screen, fills the page when printing) -->
+<div class="poster" aria-hidden="true">
+  <div class="poster-tag">// CAR HACKING VILLAGE</div>
+  <div class="poster-title">HACK THE<br>CLUSTER</div>
+  <div class="poster-qr" id="qrcodePoster"></div>
+  <div class="poster-url" id="qrPosterUrl">roaldnefs.github.io/car-hacking-village</div>
+  <div class="poster-tagline">grab an adapter &middot; find a cluster &middot; inject some frames</div>
+  <div class="poster-foot">by Warpnet &amp; Roald Nefs</div>
 </div>
 
 <div class="tape warn" aria-hidden="true"></div>
