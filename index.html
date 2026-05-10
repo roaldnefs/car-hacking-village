@@ -485,15 +485,7 @@
     <li><label><input type="checkbox"><span class="task">Hold a steady idle (≈800 RPM) <span class="pts">+20</span></span></label></li>
   </ul>
 
-  <h3>Challenge 05 // Speedometer</h3>
-  <p>Same drill, different gauge. The speed signal lives on its own ID. Bonus points for elegance.</p>
-  <ul class="mission">
-    <li><label><input type="checkbox"><span class="task">Show any non-zero speed <span class="pts">+15</span></span></label></li>
-    <li><label><input type="checkbox"><span class="task">Hold a constant 130 km/h for 10s <span class="pts">+20</span></span></label></li>
-    <li><label><input type="checkbox"><span class="task">Sweep 0 → 200 → 0 smoothly <span class="pts">+30</span></span></label></li>
-  </ul>
-
-  <h3>Challenge 06 // Fuzz responsibly <span class="stamp">CAUTION</span></h3>
+  <h3>Challenge 05 // Fuzz responsibly <span class="stamp">CAUTION</span></h3>
   <p>Use the console's random/incremental send mode to fuzz a single arbitration ID and observe what wakes up. Document anything weird.</p>
   <div class="note warn">
     <div class="label">⚠ Don't fuzz wide ID ranges</div>
@@ -502,6 +494,15 @@
   <ul class="mission">
     <li><label><input type="checkbox"><span class="task">Trigger an undocumented warning light <span class="pts">+25</span></span></label></li>
     <li><label><input type="checkbox"><span class="task">Make the LCD show something unexpected <span class="pts">+30</span></span></label></li>
+  </ul>
+
+  <h3>Challenge 06 // Speedometer</h3>
+  <p>Same drill, different gauge — but this one fights back. The cluster doesn't trust a single value: it sanity-checks the speed signal against the ABS wheel speeds, and if they disagree it ignores you. You'll need to send <b>several CAN IDs together</b> (in quick succession, every ~10–20 ms) and keep their values <b>consistent</b> — e.g. claiming 130 km/h on the speedometer ID only works if the wheel speeds say the same thing.</p>
+  <p style="font-size:12px;color:var(--dim);">A bit of online research goes a long way here. Open-source PQ25 cluster simulators on GitHub spell out exactly which IDs need to agree and how each value is encoded.</p>
+  <ul class="mission">
+    <li><label><input type="checkbox"><span class="task">Show any non-zero speed <span class="pts">+15</span></span></label></li>
+    <li><label><input type="checkbox"><span class="task">Hold a constant 130 km/h for 10s <span class="pts">+20</span></span></label></li>
+    <li><label><input type="checkbox"><span class="task">Sweep 0 → 200 → 0 smoothly <span class="pts">+30</span></span></label></li>
   </ul>
 
   <!-- QUICK REFERENCE -->
