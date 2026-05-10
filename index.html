@@ -40,6 +40,19 @@
     <div class="prompt">begin_workshop --no-install --in-browser</div>
   </div>
 
+  <p style="font-size:12px;color:var(--dim);text-align:center;">
+    Stuck mid-challenge? Scroll past the challenges for the <a href="#quick-reference">quick reference</a> (CAN IDs, frame format) and <a href="#troubleshooting">troubleshooting / FAQ</a>.
+  </p>
+
+  <!-- FEATURED AT -->
+  <h2>Featured at</h2>
+  <p>The village has been deployed in the wild — bench, cluster, and CAN bus, on a folding table near you:</p>
+  <div class="bootlog" aria-label="Event deployments">
+    <div><span class="ok">[OK]</span> bsides_groningen ....... 2026 · NL · cluster popped</div>
+    <div><span class="ok">[OK]</span> bsides_luxembourg ...... 2026 · LU · cluster popped</div>
+    <div class="prompt">next_event --watching=true</div>
+  </div>
+
   <!-- WHAT YOU GET -->
   <h2>The setup</h2>
   <p>At your station you'll find a <b>Volkswagen Group instrument cluster</b> (Škoda Fabia, SEAT Ibiza, or SEAT Leon ~2010), a 12V power supply, and a <b>USB-to-CAN adapter</b> (CANable 2.0 or SH-C31A) running gs_usb / candleLight firmware.</p>
@@ -455,8 +468,9 @@
 <span class="p">ID:</span>   <span class="k">3D0</span>
 <span class="p">Data:</span> <span class="k">00 00 00 00 00 00 00 00</span>
 <span class="p">Mode:</span> <span class="k">cyclic, every 100 ms</span></pre>
+  <p style="font-size:12px;color:var(--dim);">No orange wheel on your cluster? Some are shipped with the immobilizer function disabled in EEPROM. Swap the ID for <code class="inline">050</code> to spoof the <b>airbag warning</b> instead — same payload, same cadence. The objectives below count either way.</p>
   <ul class="mission">
-    <li><label><input type="checkbox"><span class="task">Make the wheel warning go dark <span class="pts">+25</span></span></label></li>
+    <li><label><input type="checkbox"><span class="task">Make the warning light go dark <span class="pts">+25</span></span></label></li>
     <li><label><input type="checkbox"><span class="task">Find the <b>maximum interval</b> where it still stays off <span class="pts">+15</span></span></label></li>
   </ul>
 
@@ -514,7 +528,7 @@
   </ul>
 
   <!-- QUICK REFERENCE -->
-  <h2>Quick reference</h2>
+  <h2 id="quick-reference">Quick reference</h2>
 
   <h3>Useful arbitration IDs (VAG PQ-platform, ~2010)</h3>
   <table class="ref">
@@ -543,7 +557,7 @@
 <span class="p">Data:</span> <span class="k">DE AD BE EF 00 00 00 00</span></pre>
 
   <!-- TROUBLESHOOTING -->
-  <h2>Troubleshooting</h2>
+  <h2 id="troubleshooting">Troubleshooting</h2>
 
   <details>
     <summary>The browser doesn't show my adapter</summary>
