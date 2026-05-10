@@ -513,12 +513,17 @@
       <tr><th>ID</th><th>Function</th><th>Notes</th></tr>
     </thead>
     <tbody>
-      <tr><td class="id">0x280</td><td>Engine RPM</td><td>Bytes 2–3, scaled</td></tr>
-      <tr><td class="id">0x288</td><td>Brake / pedal status</td><td>—</td></tr>
-      <tr><td class="id">0x320</td><td>ABS / wheel speed</td><td>Drives speedometer</td></tr>
-      <tr><td class="id">0x3D0</td><td>Immobilizer</td><td>Cyclic, ≤500 ms</td></tr>
-      <tr><td class="id">0x470</td><td>Door / turn signals (PQ25)</td><td>Bit-packed flags</td></tr>
-      <tr><td class="id">0x5A0</td><td>Coolant / odometer</td><td>—</td></tr>
+      <tr><td class="id">0x050</td><td>Airbag</td><td>All zeros = OK</td></tr>
+      <tr><td class="id">0x1A0</td><td>ABS</td><td>—</td></tr>
+      <tr><td class="id">0x280</td><td>Engine RPM</td><td>Bytes 2–3 = RPM × 4 (LE)</td></tr>
+      <tr><td class="id">0x288</td><td>Coolant temp</td><td>Byte 1 (<code class="inline">0x9A</code> ≈ 80 °C)</td></tr>
+      <tr><td class="id">0x320</td><td>Cluster status (Kombi 1)</td><td>Emitted by cluster — don't send</td></tr>
+      <tr><td class="id">0x3D0</td><td>Immobilizer</td><td>All zeros, cyclic ~100 ms</td></tr>
+      <tr><td class="id">0x470</td><td>Turn signals (PQ25)</td><td>—</td></tr>
+      <tr><td class="id">0x480</td><td>Engine warnings</td><td>All zeros = no warnings</td></tr>
+      <tr><td class="id">0x4A0</td><td>Wheel speeds</td><td>LSB/MSB per wheel</td></tr>
+      <tr><td class="id">0x4A8</td><td>Brake pressure</td><td>All zeros = not braking</td></tr>
+      <tr><td class="id">0x5A0</td><td>Speedometer (odometer)</td><td>Bytes 5–6 = odo counter, 50/m</td></tr>
     </tbody>
   </table>
   <p style="font-size:12px;color:var(--dim);">Exact mappings vary by cluster, year, and software level. Verify by observation — that's half the fun.</p>
