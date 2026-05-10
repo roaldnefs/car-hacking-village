@@ -460,7 +460,15 @@
     <li><label><input type="checkbox"><span class="task">Find the <b>maximum interval</b> where it still stays off <span class="pts">+15</span></span></label></li>
   </ul>
 
-  <h3>Challenge 03 // Turn signals</h3>
+  <h3>Challenge 03 // Read the VIN</h3>
+  <p>The cluster quietly broadcasts its own Vehicle Identification Number. The 17-character string is split across <b>three consecutive frames on the same ID</b>, each carrying a chunk of the VIN as raw <b>ASCII bytes</b>. A hex-to-ASCII conversion is all that stands between you and the full number.</p>
+  <p style="font-size:12px;color:var(--dim);">Hint: scan the live frame view for an ID whose payload sits in the printable-ASCII range (roughly <code class="inline">0x30</code>–<code class="inline">0x5A</code>). The first byte of each frame is the chunk index (<code class="inline">00</code>, <code class="inline">01</code>, <code class="inline">02</code>) — the rest is the text.</p>
+  <ul class="mission">
+    <li><label><input type="checkbox"><span class="task">Identify the VIN broadcast ID <span class="pts">+10</span></span></label></li>
+    <li><label><input type="checkbox"><span class="task">Decode the full 17-character VIN <span class="pts">+15</span></span></label></li>
+  </ul>
+
+  <h3>Challenge 04 // Turn signals</h3>
   <p>Make the cluster blink. The arbitration ID and payload differ between platforms — that's part of the puzzle.</p>
   <table class="ref">
     <thead>
@@ -477,7 +485,7 @@
     <li><label><input type="checkbox"><span class="task">Hazards (both, simultaneous) <span class="pts">+15</span></span></label></li>
   </ul>
 
-  <h3>Challenge 04 // Pin the RPM</h3>
+  <h3>Challenge 05 // Pin the RPM</h3>
   <p>Find the tachometer message and pin the needle to the redline. The value is typically a 16-bit RPM count, big-endian, scaled — start by sweeping values and watch the needle dance.</p>
   <ul class="mission">
     <li><label><input type="checkbox"><span class="task">Move the needle <span class="pts">+15</span></span></label></li>
@@ -485,7 +493,7 @@
     <li><label><input type="checkbox"><span class="task">Hold a steady idle (≈800 RPM) <span class="pts">+20</span></span></label></li>
   </ul>
 
-  <h3>Challenge 05 // Fuzz responsibly <span class="stamp">CAUTION</span></h3>
+  <h3>Challenge 06 // Fuzz responsibly <span class="stamp">CAUTION</span></h3>
   <p>Use the console's random/incremental send mode to fuzz a single arbitration ID and observe what wakes up. Document anything weird.</p>
   <div class="note warn">
     <div class="label">⚠ Don't fuzz wide ID ranges</div>
@@ -496,13 +504,13 @@
     <li><label><input type="checkbox"><span class="task">Make the LCD show something unexpected <span class="pts">+30</span></span></label></li>
   </ul>
 
-  <h3>Challenge 06 // Speedometer</h3>
+  <h3>Challenge 07 // Speedometer</h3>
   <p>Same drill, different gauge — but this one fights back. The cluster doesn't trust a single value: it sanity-checks the speed signal against the ABS wheel speeds, and if they disagree it ignores you. You'll need to send <b>several CAN IDs together</b> (in quick succession, every ~10–20 ms) and keep their values <b>consistent</b> — e.g. claiming 130 km/h on the speedometer ID only works if the wheel speeds say the same thing.</p>
   <p style="font-size:12px;color:var(--dim);">A bit of online research goes a long way here. Open-source PQ25 cluster simulators on GitHub spell out exactly which IDs need to agree and how each value is encoded.</p>
   <ul class="mission">
-    <li><label><input type="checkbox"><span class="task">Show any non-zero speed <span class="pts">+15</span></span></label></li>
-    <li><label><input type="checkbox"><span class="task">Hold a constant 130 km/h for 10s <span class="pts">+20</span></span></label></li>
-    <li><label><input type="checkbox"><span class="task">Sweep 0 → 200 → 0 smoothly <span class="pts">+30</span></span></label></li>
+    <li><label><input type="checkbox"><span class="task">Show any non-zero speed <span class="pts">+20</span></span></label></li>
+    <li><label><input type="checkbox"><span class="task">Hold a constant 130 km/h for 10s <span class="pts">+30</span></span></label></li>
+    <li><label><input type="checkbox"><span class="task">Sweep 0 → 200 → 0 smoothly <span class="pts">+50</span></span></label></li>
   </ul>
 
   <!-- QUICK REFERENCE -->
