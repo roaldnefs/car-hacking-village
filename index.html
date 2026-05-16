@@ -16,6 +16,46 @@
 </head>
 <body>
 
+<!-- Space decorations — OrangeCon space theme only (hidden on other themes via CSS) -->
+<div class="space-decor" aria-hidden="true">
+  <svg class="planet" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="orangecon-planet" cx="36%" cy="32%" r="68%">
+        <stop offset="0%"   stop-color="#ffd9a8"/>
+        <stop offset="35%"  stop-color="#ff9b3a"/>
+        <stop offset="80%"  stop-color="#a04500"/>
+        <stop offset="100%" stop-color="#2a1000"/>
+      </radialGradient>
+    </defs>
+    <g transform="rotate(-22 120 120)">
+      <path d="M 10 120 a 110 22 0 0 1 220 0" fill="none" stroke="#ff7a00" stroke-width="3" opacity="0.55"/>
+      <path d="M 20 120 a 100 18 0 0 1 200 0" fill="none" stroke="#ffd29a" stroke-width="1.5" opacity="0.4"/>
+      <circle cx="120" cy="120" r="58" fill="url(#orangecon-planet)"/>
+      <ellipse cx="120" cy="120" rx="58" ry="6" fill="#a04500" opacity="0.25"/>
+      <ellipse cx="120" cy="105" rx="56" ry="4" fill="#3d1a00" opacity="0.18"/>
+      <circle cx="120" cy="120" r="58" fill="none" stroke="#ffb56b" stroke-width="0.8" opacity="0.5"/>
+      <path d="M 10 120 a 110 22 0 0 0 220 0" fill="none" stroke="#ffb56b" stroke-width="3" opacity="0.9"/>
+      <path d="M 20 120 a 100 18 0 0 0 200 0" fill="none" stroke="#ff7a00" stroke-width="1.5" opacity="0.7"/>
+    </g>
+  </svg>
+  <svg class="moon" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="orangecon-moon" cx="38%" cy="35%" r="62%">
+        <stop offset="0%"   stop-color="#ffc380"/>
+        <stop offset="55%"  stop-color="#c0651e"/>
+        <stop offset="100%" stop-color="#3a1500"/>
+      </radialGradient>
+    </defs>
+    <circle cx="70" cy="70" r="44" fill="url(#orangecon-moon)"/>
+    <circle cx="58" cy="60" r="4"   fill="#3a1500" opacity="0.35"/>
+    <circle cx="85" cy="78" r="3"   fill="#3a1500" opacity="0.3"/>
+    <circle cx="68" cy="92" r="2.5" fill="#3a1500" opacity="0.3"/>
+    <circle cx="50" cy="80" r="2"   fill="#3a1500" opacity="0.28"/>
+    <circle cx="78" cy="55" r="1.5" fill="#3a1500" opacity="0.25"/>
+  </svg>
+  <span class="shooter"></span>
+</div>
+
 <div class="tape" aria-hidden="true"></div>
 
 <div class="wrap">
