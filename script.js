@@ -135,13 +135,10 @@
   update();
 })();
 
-// ---- QR code (scan-to-load) + print poster ----
+// ---- QR code (scan-to-load) ----
 (function() {
-  const onPage   = document.getElementById('qrcode');
-  const onPoster = document.getElementById('qrcodePoster');
-  const urlEl    = document.getElementById('qrUrl');
-  const posterUrlEl = document.getElementById('qrPosterUrl');
-  const printBtn = document.getElementById('qrPrint');
+  const onPage = document.getElementById('qrcode');
+  const urlEl  = document.getElementById('qrUrl');
   if (!onPage || typeof qrcode === 'undefined') return;
 
   const fullUrl = location.href.replace(/[#?].*$/, '');
@@ -152,11 +149,7 @@
   qr.make();
   const tag = qr.createSvgTag({ scalable: true, margin: 0 });
   onPage.innerHTML = tag;
-  if (onPoster) onPoster.innerHTML = tag;
   if (urlEl) urlEl.textContent = display;
-  if (posterUrlEl) posterUrlEl.textContent = display;
-
-  if (printBtn) printBtn.addEventListener('click', () => window.print());
 })();
 
 // ---- Theme toggle (orange → dark → light → orange …) ----
