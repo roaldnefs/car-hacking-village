@@ -120,6 +120,135 @@
     <div class="prompt">next_event --watching=true</div>
   </div>
 
+  <!-- INTRO / PRIMER -->
+  <h2>First time? Start here</h2>
+  <p>Modern cars are rolling networks. Pressing the brake pedal, flicking the indicator, or seeing a fuel warning all happen because <b>ECUs</b> — small computers scattered through the car — exchange short broadcast messages on shared wires. Reading those messages, replaying them, and (responsibly) injecting new ones is the heart of <b>car hacking</b>. People do it for security research, restoring or modding older vehicles, motorsport telemetry, or just to learn how the rolling computer thinks.</p>
+
+  <h3>CAN bus in one minute</h3>
+  <p><b>CAN</b> (Controller Area Network) is the most common in-vehicle bus — a two-wire differential pair (<code class="inline">CAN-H</code> / <code class="inline">CAN-L</code>) where every ECU shouts and every ECU listens. There's no addressing: each <b>frame</b> carries an 11-bit <b>arbitration ID</b> (think topic + priority) and up to <b>8 bytes</b> of payload. Lower IDs win the bus when two nodes talk at once, so safety-critical traffic (brakes, airbags) sits at the front of the queue.</p>
+
+  <pre><span class="c"># a CAN frame as you'll see it in the console:</span>
+<span class="k">320</span>#<span class="p">0510002A00000000</span>
+ <span class="c">│   └─ up to 8 payload bytes (hex)</span>
+ <span class="c">└────── 11-bit arbitration ID (hex)</span></pre>
+  <p style="font-size:12px;color:var(--dim);margin-top:-4px;">Full breakdown lives in the <a href="#quick-reference">quick reference</a>.</p>
+
+  <h3>Who's on the bus?</h3>
+  <p>A modern car carries <b>50–100 ECUs</b>, each a small embedded computer dedicated to one job: engine management, ABS, body control (lights, locks, indicators), the instrument cluster, the gateway to OBD-II, infotainment, airbag, climate. They all tap onto the same two wires in a <b>linear bus</b> — no master, no client, no addressing — just a shared loudspeaker. A <b>120Ω resistor</b> at each end keeps the signal from echoing back.</p>
+
+  <div class="diagram" aria-label="CAN bus topology diagram">
+    <div class="caption">
+      <span>Fig 01 // Who's on the bus</span>
+      <span>↓</span>
+    </div>
+    <svg viewBox="0 0 720 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="bus-title">
+      <title id="bus-title">Linear CAN bus topology: five ECUs (Engine, ABS, BCM, Cluster, Gateway) tap a shared two-wire differential pair, terminated at each end with a 120-ohm resistor.</title>
+
+      <!-- Left terminator -->
+      <g transform="translate(16,140)">
+        <rect x="0" y="-14" width="34" height="28" fill="#0a0c0a" stroke="#8a948a" stroke-width="1.2"/>
+        <text x="17" y="4" text-anchor="middle" class="svg-text svg-text-dim" font-size="9" font-weight="700">120Ω</text>
+      </g>
+
+      <!-- Bus wires (CAN-H above, CAN-L below) -->
+      <line x1="50" y1="132" x2="670" y2="132" stroke="#ffe066" stroke-width="2.5"/>
+      <line x1="50" y1="148" x2="670" y2="148" stroke="rgb(45,216,129)" stroke-width="2.5"/>
+      <text x="54" y="124" class="svg-text" fill="#ffe066" font-size="9" font-weight="700">CAN-H</text>
+      <text x="54" y="164" class="svg-text svg-text-accent" font-size="9" font-weight="700">CAN-L</text>
+
+      <!-- Right terminator -->
+      <g transform="translate(670,140)">
+        <rect x="0" y="-14" width="34" height="28" fill="#0a0c0a" stroke="#8a948a" stroke-width="1.2"/>
+        <text x="17" y="4" text-anchor="middle" class="svg-text svg-text-dim" font-size="9" font-weight="700">120Ω</text>
+      </g>
+
+      <!-- ECU: Engine (center x=110) -->
+      <g transform="translate(70,32)">
+        <rect width="80" height="62" fill="#0a0c0a" stroke="rgb(255,176,0)" stroke-width="1.4"/>
+        <text x="40" y="24" text-anchor="middle" class="svg-text svg-text-amber" font-size="11" font-weight="700">ENGINE</text>
+        <text x="40" y="40" text-anchor="middle" class="svg-text svg-text-dim" font-size="8">RPM · fuel</text>
+        <text x="40" y="54" text-anchor="middle" class="svg-text svg-text-dim" font-size="8">timing</text>
+      </g>
+      <line x1="106" y1="94" x2="106" y2="132" stroke="#ffe066" stroke-width="1.5"/>
+      <circle cx="106" cy="132" r="3" fill="#ffe066"/>
+      <line x1="114" y1="94" x2="114" y2="148" stroke="rgb(45,216,129)" stroke-width="1.5"/>
+      <circle cx="114" cy="148" r="3" fill="rgb(45,216,129)"/>
+
+      <!-- ECU: ABS (center x=230) -->
+      <g transform="translate(190,32)">
+        <rect width="80" height="62" fill="#0a0c0a" stroke="rgb(255,176,0)" stroke-width="1.4"/>
+        <text x="40" y="24" text-anchor="middle" class="svg-text svg-text-amber" font-size="11" font-weight="700">ABS</text>
+        <text x="40" y="40" text-anchor="middle" class="svg-text svg-text-dim" font-size="8">wheel speed</text>
+        <text x="40" y="54" text-anchor="middle" class="svg-text svg-text-dim" font-size="8">brake force</text>
+      </g>
+      <line x1="226" y1="94" x2="226" y2="132" stroke="#ffe066" stroke-width="1.5"/>
+      <circle cx="226" cy="132" r="3" fill="#ffe066"/>
+      <line x1="234" y1="94" x2="234" y2="148" stroke="rgb(45,216,129)" stroke-width="1.5"/>
+      <circle cx="234" cy="148" r="3" fill="rgb(45,216,129)"/>
+
+      <!-- ECU: BCM (center x=350) -->
+      <g transform="translate(310,32)">
+        <rect width="80" height="62" fill="#0a0c0a" stroke="rgb(255,176,0)" stroke-width="1.4"/>
+        <text x="40" y="24" text-anchor="middle" class="svg-text svg-text-amber" font-size="11" font-weight="700">BCM</text>
+        <text x="40" y="40" text-anchor="middle" class="svg-text svg-text-dim" font-size="8">lights · locks</text>
+        <text x="40" y="54" text-anchor="middle" class="svg-text svg-text-dim" font-size="8">indicators</text>
+      </g>
+      <line x1="346" y1="94" x2="346" y2="132" stroke="#ffe066" stroke-width="1.5"/>
+      <circle cx="346" cy="132" r="3" fill="#ffe066"/>
+      <line x1="354" y1="94" x2="354" y2="148" stroke="rgb(45,216,129)" stroke-width="1.5"/>
+      <circle cx="354" cy="148" r="3" fill="rgb(45,216,129)"/>
+
+      <!-- ECU: Cluster — highlighted in accent green (center x=470) -->
+      <g transform="translate(430,28)">
+        <rect width="80" height="68" fill="#0d1a10" stroke="rgb(45,216,129)" stroke-width="2"/>
+        <text x="40" y="24" text-anchor="middle" class="svg-text svg-text-accent" font-size="11" font-weight="700">CLUSTER</text>
+        <text x="40" y="40" text-anchor="middle" class="svg-text svg-text-dim" font-size="8">speedo · RPM</text>
+        <text x="40" y="54" text-anchor="middle" class="svg-text svg-text-dim" font-size="8">warnings</text>
+      </g>
+      <line x1="466" y1="96" x2="466" y2="132" stroke="#ffe066" stroke-width="1.8"/>
+      <circle cx="466" cy="132" r="3.5" fill="#ffe066"/>
+      <line x1="474" y1="96" x2="474" y2="148" stroke="rgb(45,216,129)" stroke-width="1.8"/>
+      <circle cx="474" cy="148" r="3.5" fill="rgb(45,216,129)"/>
+
+      <!-- ECU: Gateway (center x=590) -->
+      <g transform="translate(550,32)">
+        <rect width="80" height="62" fill="#0a0c0a" stroke="rgb(255,176,0)" stroke-width="1.4"/>
+        <text x="40" y="24" text-anchor="middle" class="svg-text svg-text-amber" font-size="11" font-weight="700">GATEWAY</text>
+        <text x="40" y="40" text-anchor="middle" class="svg-text svg-text-dim" font-size="8">→ OBD-II</text>
+        <text x="40" y="54" text-anchor="middle" class="svg-text svg-text-dim" font-size="8">other buses</text>
+      </g>
+      <line x1="586" y1="94" x2="586" y2="132" stroke="#ffe066" stroke-width="1.5"/>
+      <circle cx="586" cy="132" r="3" fill="#ffe066"/>
+      <line x1="594" y1="94" x2="594" y2="148" stroke="rgb(45,216,129)" stroke-width="1.5"/>
+      <circle cx="594" cy="148" r="3" fill="rgb(45,216,129)"/>
+
+      <!-- Broadcast caption -->
+      <text x="360" y="200" text-anchor="middle" class="svg-text svg-text-dim" font-size="10" font-style="italic">every frame travels both directions — every ECU hears it, each decides whether to care</text>
+    </svg>
+  </div>
+
+  <p>Frames are <b>broadcast</b>. When the engine ECU posts an RPM update, it doesn't address it to anyone — it just shouts. The cluster picks it up to move the tacho, the gateway might forward it to the OBD-II port, everything else ignores it. That's why <b>sniffing</b> is move one (you read everyone's mail without asking), and why <b>replay</b> works — nothing on the bus knows whether a frame came from the real engine ECU or your laptop.</p>
+
+  <h3>Why an instrument cluster?</h3>
+  <p>Clusters are <b>passive listeners</b> for most of what they display — speed, RPM, fuel level, lights, warnings — but they also <b>talk back</b> on the same bus (immobilizer dialogue, VIN, diagnostics). On the bench they're cheap, safe, and give instant visual feedback when a frame lands. No engine, no airbags, no insurance company. A good first stop before you ever touch a real car.</p>
+
+  <h3>The loop you'll repeat</h3>
+  <dl class="pinout">
+    <dt>01</dt><dd><b>Sniff</b> &nbsp;— watch the frames the cluster emits and consumes.</dd>
+    <dt>02</dt><dd><b>Identify</b> &nbsp;— match an ID to a behavior (flick the indicator → certain IDs flip).</dd>
+    <dt>03</dt><dd><b>Replay</b> &nbsp;— send the same bytes back; confirm the cluster reacts.</dd>
+    <dt>04</dt><dd><b>Vary</b> &nbsp;— change one byte at a time; watch what moves.</dd>
+  </dl>
+
+  <h3>Why replay isn't always one-shot</h3>
+  <p>Most frames on the bus aren't sent once — they're <b>periodic</b>, re-broadcast every 10–100 ms whether anything changed or not. RPM, speed, fuel level: all heartbeat traffic. A handful are <b>event-triggered</b>: door opened, indicator flipped, gear shifted. If you replay a single periodic frame with a new value, the real ECU is still shouting the old value 10× per second and your change <b>snaps back</b> in a blink. To <b>hold</b> a value, you have to keep sending at roughly the same cadence — the WebUSB console's <b>Send loop</b> does this for you.</p>
+  <p>Many production frames also carry a <b>rolling counter</b> (often a 4-bit nibble that increments on every send) and a <b>checksum</b> or CRC in the payload. The receiver only accepts frames where both look right — replay an old frame verbatim and the cluster may quietly ignore it. The bench clusters in this village are forgiving on most IDs, but if a replay does nothing and the wiring checks out, suspect the counter first.</p>
+
+  <div class="note">
+    <div class="label">// Don't memorise this</div>
+    Every challenge below shows the exact frame to send. This page is a tour, not a textbook — skim what you need and come back later.
+  </div>
+
   <!-- WHAT YOU GET -->
   <h2>The setup</h2>
   <p>At your station you'll find a <b>Volkswagen Group instrument cluster</b> (Škoda Fabia, SEAT Ibiza, or SEAT Leon ~2010), a 12V power supply, and a <b>USB-to-CAN adapter</b> (CANable 2.0 or SH-C31A) running gs_usb / candleLight firmware.</p>
@@ -158,7 +287,7 @@
   <!-- Wiring overview diagram -->
   <div class="diagram" aria-label="Wiring overview diagram">
     <div class="caption">
-      <span>Fig 01 // The full data path</span>
+      <span>Fig 02 // The full data path</span>
       <span>↓</span>
     </div>
     <svg viewBox="0 0 720 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="wiring-title">
@@ -305,7 +434,7 @@
       <!-- Pinout diagram -->
       <div class="diagram" style="max-width:340px;margin-left:auto;margin-right:auto;">
         <div class="caption">
-          <span>Fig 02 // Pinout map</span>
+          <span>Fig 03 // Pinout map</span>
           <span class="view">VIEWED FROM WIRE SIDE</span>
         </div>
         <svg viewBox="0 0 420 660" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="pinout-title">
@@ -736,10 +865,10 @@
   <footer>
     <div class="row">
       <span>CAR HACKING VILLAGE</span>
-      <span><a href="https://roaldnefs.com" target="_blank" rel="noopener">roaldnefs.com</a></span>
+      <span><a href="https://warpnet.nl" target="_blank" rel="noopener">warpnet.nl</a> &middot; <a href="https://roaldnefs.com" target="_blank" rel="noopener">roaldnefs.com</a></span>
     </div>
     <div class="row" style="margin-top:14px;color:var(--dim);font-size:11px;letter-spacing:0.1em;">
-      <span>// END OF TRANSMISSION</span>
+      <span>CREATED BY WARPNET &amp; ROALD NEFS</span>
       <span class="blink" style="color:var(--accent);">_</span>
     </div>
   </footer>
